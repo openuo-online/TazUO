@@ -6872,8 +6872,7 @@ sealed class PacketHandlers
                 IsFromServer = true
             };
         }
-
-            gump.PacketGumpText = string.Join("\n", lines);
+        StringBuilder gumpTextBuilder = new StringBuilder(string.Join("\n", lines));
 
         int group = 0;
         int page = 0;
@@ -6889,8 +6888,8 @@ sealed class PacketHandlers
                 continue;
             }
 
-                string entry = gparams[0];
-                gump.PacketGumpText += string.Join(" ", gparams) + "\n";
+            string entry = gparams[0];
+            gumpTextBuilder.Append(string.Join(" ", gparams)).Append('\n');
 
             if (string.Equals(entry, "button", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -7412,6 +7411,8 @@ sealed class PacketHandlers
                 Log.Warn($"Invalid Gump Command: \"{gparams[0]}\"");
             }
         }
+
+        gump.PacketGumpText = gumpTextBuilder.ToString();
 
         if (mustBeAdded)
         {
