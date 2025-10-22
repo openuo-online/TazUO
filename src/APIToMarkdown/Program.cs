@@ -541,8 +541,8 @@ public static class GenDoc
         // Include fully qualified names if they might appear from ToString()
         return csharpType switch
         {
-            "int" or "Int32" or "System.Int32" => "int",
-            "uint" or "UInt32" or "System.UInt32" => "int", // Map unsigned to int
+            "int" or "int?" or "Int32" or "System.Int32" => "int",
+            "uint" or "uint?" or "UInt32" or "System.UInt32" => "int", // Map unsigned to int
             "short" or "Int16" or "System.Int16" => "int",
             "ushort" or "UInt16" or "System.UInt16" => "int",
             "long" or "Int64" or "System.Int64" => "int",
@@ -551,7 +551,7 @@ public static class GenDoc
             "sbyte" or "SByte" or "System.SByte" => "int",
             "string" or "String" or "System.String" => "str",
             "char" or "Char" or "System.Char" => "str", // Map C# char to Python str
-            "bool" or "Boolean" or "System.Boolean" => "bool",
+            "bool" or "bool?" or "Boolean" or "System.Boolean" => "bool",
             "double" or "Double" or "System.Double" => "float",
             "float" or "Single" or "System.Single" => "float", // C# float is System.Single
             "decimal" or "Decimal" or "System.Decimal" => "float", // Or use Python's Decimal type

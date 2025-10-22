@@ -1529,6 +1529,29 @@ def CloseGump(ID: int = 1337) -> None:
     """
     pass
 
+def ConfigNextGump(serial: int | None = None, x: int | None = None, y: int | None = None, isVisible: bool | None = None, autoClose: bool | None = None, autoRespond: bool | None = None, autoRespondButton: int | None = None) -> None:
+    """
+     Configure how the next gump should be handled.
+     Example:
+     ```py
+     # Position gump at coordinates
+     API.ConfigNextGump(x=100, y=200)
+    
+     # Auto-close any gump
+     API.ConfigNextGump(autoClose=True)
+    
+     # Auto-respond to specific gump
+     API.ConfigNextGump(serial=0x12345678, autoRespond=True, autoRespondButton=1)
+    
+     # Clear configuration
+     API.ConfigNextGump()
+    
+     Note: This is only applied once. You cannot stack multiple configs. This is reset after successfully applied and only applies to server-sent gumps.
+     ```
+    
+    """
+    pass
+
 def GumpContains(text: str, ID: int = 1337) -> bool:
     """
      Check if a gump contains a specific text.

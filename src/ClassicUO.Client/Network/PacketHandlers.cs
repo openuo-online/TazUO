@@ -7517,6 +7517,8 @@ sealed class PacketHandlers
             gump.CenterYInViewPort();
         }
 
+        NextGumpConfig.Apply(gump);
+
         return gump;
     }
 
