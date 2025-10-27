@@ -466,7 +466,7 @@ class PyStatic:
 
 JournalEntries = None
 Backpack: int = None
-Player = None
+Player: PyPlayer = None
 Bank: int = None
 Random = None
 LastTargetSerial: int = None

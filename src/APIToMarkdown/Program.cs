@@ -579,6 +579,7 @@ public static class GenDoc
             "PyBaseGump" => "PyBaseGump",
             "PyScrollArea" => "PyScrollArea",
             "PythonList" => "List",
+            "PyPlayer" => "PyPlayer",
 
             // Fallback for unknown types
             _ => noMatch
