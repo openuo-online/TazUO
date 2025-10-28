@@ -9,6 +9,20 @@ public class PyBaseControl(Control control)
 {
     internal Control Control => control;
 
+    public bool IsVisible
+    {
+        get
+        {
+            return VerifyIntegrity() && control.IsVisible;
+        }
+        set
+        {
+            if (!VerifyIntegrity()) return;
+
+            control.IsVisible = value;
+        }
+    }
+
     /// <summary>
     /// Adds a child control to this control. Works with gumps too (gump.Add(control)).
     /// Used in python API
