@@ -757,6 +757,11 @@ namespace ClassicUO.Game.Scenes
 
                             switch (obj)
                             {
+                                case Static stat:
+                                    _world.TargetManager.Reset();
+                                    MultiItemMoveGump.OnContainerTarget(_world, stat.X, stat.Y, stat.Z);
+                                    break;
+
                                 case Land land:
                                     _world.TargetManager.Reset();
                                     MultiItemMoveGump.OnContainerTarget(_world, land.X, land.Y, land.Z);
