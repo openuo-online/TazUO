@@ -230,7 +230,7 @@ namespace ClassicUO.Game.Managers
         {
             if (!_loaded || CurrentSpell == null || !IsCasting || ProfileManager.CurrentProfile == null || !ProfileManager.CurrentProfile.EnableSpellIndicators) return false;
 
-            if (_world.TargetManager.IsTargeting || (CurrentSpell.ShowCastRangeDuringCasting && IsCastingWithoutTarget()))
+            if (_world?.TargetManager?.IsTargeting ?? (CurrentSpell.ShowCastRangeDuringCasting && IsCastingWithoutTarget()))
                 if (LastSpellTime + TimeSpan.FromSeconds(CurrentSpell.MaxDuration) > DateTime.Now)
                     return true;
 
