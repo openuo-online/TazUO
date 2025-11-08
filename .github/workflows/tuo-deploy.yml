@@ -8,6 +8,9 @@ on:
     types:
       - completed
 
+permissions:
+  contents: write
+  
 env:
   CUO_OUTPUT_PATH: 'build/dist'
   CUO_PROJECT_PATH: "src/ClassicUO.Client/ClassicUO.Client.csproj"
