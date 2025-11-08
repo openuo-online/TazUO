@@ -52,6 +52,9 @@ namespace ClassicUO.Configuration
             }
 
             ValidateFields(CurrentProfile);
+            
+            // 自动应用DPI缩放（如果尚未手动配置）
+            ApplyAutoDPIScaling(CurrentProfile);
 
             Client.Game?.SetVSync(CurrentProfile.EnableVSync);
         }
@@ -94,5 +97,31 @@ namespace ClassicUO.Configuration
         }
 
         public static void UnLoadProfile() => CurrentProfile = null;
+
+        /// <summary>
+        /// 根据DPI自动应用全局缩放
+        /// 只在用户未手动配置时自动设置
+        /// </summary>
+        private static void ApplyAutoDPIScaling(Profile profile)
+        {
+            if (profile == null)
+                return;
+
+            float dpiScale = CUOEnviroment.DPIScaleFactor;
+
+            // 如果DPI缩放大于1.0，且用户还没有启用GlobalScaling，则自动启用
+            if (dpiScale > 1.0f && !profile.GlobalScaling)
+            {
+                // 检查是否是首次加载（GlobalScale仍为默认值1.5）
+                // 如果用户已经手动调整过，我们不覆盖
+                if (profile.GlobalScale == 1.5f || profile.GlobalScale == 1.0f)
+                {
+                    profile.GlobalScaling = true;
+                    profile.GlobalScale = dpiScale;
+                    
+                    Utility.Logging.Log.Trace($"Auto-enabled global scaling: {dpiScale:F2}x for high-DPI display");
+                }
+            }
+        }
     }
 }

@@ -427,8 +427,26 @@ namespace ClassicUO.Game.Managers
         public static void Draw(UltimaBatcher2D batcher)
         {
             SortControlsByInfo();
-            if (InGame && ProfileManager.CurrentProfile.GlobalScaling)
-                batcher.Begin(null, Matrix.CreateScale(ProfileManager.CurrentProfile.GlobalScale));
+            
+            // 确定是否需要应用缩放
+            bool shouldScale = false;
+            float scale = 1.0f;
+            
+            if (InGame && ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.GlobalScaling)
+            {
+                // 游戏内使用Profile的缩放设置
+                shouldScale = true;
+                scale = ProfileManager.CurrentProfile.GlobalScale;
+            }
+            else if (!InGame && CUOEnviroment.DPIScaleFactor > 1.0f)
+            {
+                // 登录界面也使用DPI缩放
+                shouldScale = true;
+                scale = CUOEnviroment.DPIScaleFactor;
+            }
+            
+            if (shouldScale)
+                batcher.Begin(null, Matrix.CreateScale(scale));
             else
                 batcher.Begin();
 

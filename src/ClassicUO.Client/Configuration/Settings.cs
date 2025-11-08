@@ -58,7 +58,7 @@ namespace ClassicUO.Configuration
         [JsonConverter(typeof(NullablePoint2Converter))][JsonPropertyName("window_position")] public Point? WindowPosition { get; set; }
         [JsonConverter(typeof(NullablePoint2Converter))][JsonPropertyName("window_size")] public Point? WindowSize { get; set; }
 
-        [JsonPropertyName("is_win_maximized")] public bool IsWindowMaximized { get; set; } = true;
+        [JsonPropertyName("is_win_maximized")] public bool IsWindowMaximized { get; set; } = false;
 
         [JsonPropertyName("saveaccount")] public bool SaveAccount { get; set; } = true;
 

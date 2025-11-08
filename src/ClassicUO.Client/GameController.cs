@@ -63,12 +63,15 @@ namespace ClassicUO
             GraphicManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             SetVSync(false);
 
+            // 智能初始化窗体大小
+            InitializeWindowSize();
+
             Window.ClientSizeChanged += WindowOnClientSizeChanged;
             Window.AllowUserResizing = true;
             Window.Title = $"TazUO - {CUOEnviroment.Version}";
             IsMouseVisible = Settings.GlobalSettings.RunMouseInASeparateThread;
 
-            IsFixedTimeStep = false; // Settings.GlobalSettings.FixedTimeStep;
+            IsFixedTimeStep = false;
             TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / 250.0);
             PluginHost = pluginHost;
             bufferRect = new Rectangle(0, 0, GraphicManager.PreferredBackBufferWidth, GraphicManager.PreferredBackBufferHeight);
@@ -89,11 +92,130 @@ namespace ClassicUO
 
         public void EnqueueAction(uint time, Action action) => _queuedActions.Add((Time.Ticks + time, action));
 
+        /// <summary>
+        /// 智能初始化窗体大小和UI缩放
+        /// 策略：根据显示器DPI决定UI缩放，窗体大小占屏幕的合理比例
+        /// </summary>
+        private void InitializeWindowSize()
+        {
+            // 获取显示器信息
+            uint displayId = SDL_GetPrimaryDisplay();
+            if (!SDL_GetDisplayBounds(displayId, out SDL_Rect displayBounds))
+            {
+                Log.Warn("Failed to get display bounds, using fallback");
+                SetFallbackWindowSize();
+                CUOEnviroment.DPIScaleFactor = 1.0f;
+                return;
+            }
+
+            // 检测DPI并设置全局UI缩放因子
+            float dpiScale = GetDisplayDpiScale(displayId);
+            CUOEnviroment.DPIScaleFactor = dpiScale;
+            Log.Trace($"Display: {displayBounds.w}x{displayBounds.h}, DPI Scale: {dpiScale:F2}");
+            
+            // 如果用户已保存窗体大小，优先使用
+            if (Settings.GlobalSettings.WindowSize.HasValue)
+            {
+                var savedSize = Settings.GlobalSettings.WindowSize.Value;
+                GraphicManager.PreferredBackBufferWidth = savedSize.X;
+                GraphicManager.PreferredBackBufferHeight = savedSize.Y;
+                Log.Trace($"Using saved window size: {savedSize.X}x{savedSize.Y}");
+                return;
+            }
+
+            // 计算合适的窗体大小（占屏幕50-60%）
+            var (windowWidth, windowHeight) = CalculateOptimalWindowSize(displayBounds.w, displayBounds.h);
+
+            GraphicManager.PreferredBackBufferWidth = windowWidth;
+            GraphicManager.PreferredBackBufferHeight = windowHeight;
+            Settings.GlobalSettings.WindowSize = new Point(windowWidth, windowHeight);
+            Settings.GlobalSettings.IsWindowMaximized = false;
+
+            Log.Trace($"Auto window size: {windowWidth}x{windowHeight}");
+        }
+
+        /// <summary>
+        /// 获取显示器DPI缩放比例
+        /// </summary>
+        private float GetDisplayDpiScale(uint displayId)
+        {
+            // 尝试从SDL3获取DPI缩放
+            float scale = SDL_GetDisplayContentScale(displayId);
+            if (scale > 0 && scale < 10.0f)
+            {
+                return scale;
+            }
+
+            // 如果SDL返回无效值，根据分辨率估算
+            if (SDL_GetDisplayBounds(displayId, out SDL_Rect bounds))
+            {
+                int pixels = bounds.w * bounds.h;
+                if (pixels >= 14745600) return 2.5f;      // 5K+
+                else if (pixels >= 8294400) return 2.0f;  // 4K
+                else if (pixels >= 3686400) return 1.5f;  // 2K
+            }
+
+            return 1.0f; // 默认1080P
+        }
+
+        /// <summary>
+        /// 计算最佳窗体大小
+        /// 策略：根据屏幕大小选择合适的窗体尺寸
+        /// </summary>
+        private (int width, int height) CalculateOptimalWindowSize(int screenWidth, int screenHeight)
+        {
+            // 根据屏幕分辨率选择合适的窗体大小
+            // 目标：窗体不要太大，UI通过缩放来放大
+            int targetWidth, targetHeight;
+
+            if (screenWidth >= 3840) // 4K或更高
+            {
+                // 4K显示器：使用1600x1200，UI缩放2.0x
+                targetWidth = 1600;
+                targetHeight = 1200;
+            }
+            else if (screenWidth >= 2560) // 2K
+            {
+                // 2K显示器：使用1400x1050，UI缩放1.5x
+                targetWidth = 1400;
+                targetHeight = 1050;
+            }
+            else // 1080P或更低
+            {
+                // 1080P：使用1280x960，UI缩放1.0x
+                targetWidth = 1280;
+                targetHeight = 960;
+            }
+
+            // 确保不超过屏幕的75%
+            int maxWidth = (int)(screenWidth * 0.75);
+            int maxHeight = (int)(screenHeight * 0.75);
+
+            if (targetWidth > maxWidth || targetHeight > maxHeight)
+            {
+                float scale = Math.Min((float)maxWidth / targetWidth, (float)maxHeight / targetHeight);
+                targetWidth = (int)(targetWidth * scale);
+                targetHeight = (int)(targetHeight * scale);
+            }
+
+            // 确保最小尺寸和4:3比例
+            targetWidth = Math.Max(targetWidth, 1024);
+            targetHeight = Math.Max(targetHeight, 768);
+
+            return (targetWidth, targetHeight);
+        }
+
+        private void SetFallbackWindowSize()
+        {
+            GraphicManager.PreferredBackBufferWidth = 1280;
+            GraphicManager.PreferredBackBufferHeight = 960;
+        }
+
         protected override void Initialize()
         {
             MainThreadQueue.Load();
-
             PreloadSettings();
+            
             if (GraphicManager.GraphicsDevice.Adapter.IsProfileSupported(GraphicsProfile.HiDef))
             {
                 GraphicManager.GraphicsProfile = GraphicsProfile.HiDef;
@@ -207,6 +329,15 @@ namespace ClassicUO
                 Math.Max(0, Window.ClientBounds.X - left),
                 Math.Max(0, Window.ClientBounds.Y - top)
             );
+
+            // 保存窗体大小（如果不是最大化状态）
+            if (!IsWindowMaximized())
+            {
+                Settings.GlobalSettings.WindowSize = new Point(
+                    Window.ClientBounds.Width,
+                    Window.ClientBounds.Height
+                );
+            }
 
             Audio?.StopMusic();
             Settings.GlobalSettings.Save();

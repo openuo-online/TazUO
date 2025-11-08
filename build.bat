@@ -19,19 +19,8 @@ if "%ERRORLEVEL%"=="0" (
 )
 
 echo.
-echo [1/3] 清理项目...
-dotnet clean --configuration Debug
-
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo [错误] 清理失败！
-    pause
-    exit /b 1
-)
-
-echo.
-echo [2/3] 编译项目...
-dotnet build --configuration Debug --verbosity minimal
+echo [1/2] 快速增量编译...
+dotnet build --configuration Debug --no-restore --verbosity minimal
 
 if %ERRORLEVEL% EQU 0 (
     echo.
@@ -39,10 +28,20 @@ if %ERRORLEVEL% EQU 0 (
     echo    ✓ 编译成功！
     echo ========================================
     echo.
+    echo [2/2] 启动游戏...
+    echo.
+    
+    cd bin\Debug\net9.0\win-x64
+    start TazUO.exe
+    
+    echo 游戏已启动！
+    echo.
 ) else (
     echo.
     echo [错误] 编译失败！
     echo.
+    pause
+    exit /b 1
 )
 
-pause
+timeout /t 3 /nobreak >NUL

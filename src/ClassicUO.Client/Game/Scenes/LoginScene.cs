@@ -142,7 +142,11 @@ namespace ClassicUO.Game.Scenes
                 Client.Game.RestoreWindow();
             }
 
-            Client.Game.SetWindowSize(640, 480);
+            // 登录界面：固定640x480，根据DPI缩放窗体大小
+            // 这样视觉上始终是640x480的大小
+            int loginWidth = (int)(640 * CUOEnviroment.DPIScaleFactor);
+            int loginHeight = (int)(480 * CUOEnviroment.DPIScaleFactor);
+            Client.Game.SetWindowSize(loginWidth, loginHeight);
         }
 
 
