@@ -1,5 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Text.Json;
+using System.Text;
 
 namespace ClassicUO.Configuration
 {
@@ -25,20 +28,75 @@ namespace ClassicUO.Configuration
 
         [JsonIgnore]
         public static Language Instance { get; private set; } = new Language();
+        // The language file actually loaded (culture-aware); used for saving back
+        private static string _loadedLanguageFilePath;
 
         public static void Load()
         {
+            // Try culture-specific language file first (e.g., Data/Language.zh-CN.json)
+            string pathToLoad = ResolveLanguageFilePathForLoad();
+            _loadedLanguageFilePath = pathToLoad;
+            if (File.Exists(pathToLoad))
+            {
+                try
+                {
+                    string jsonContent = ReadAllTextAuto(pathToLoad);
+                    System.Diagnostics.Debug.WriteLine($"Loading language file: {pathToLoad} (size: {jsonContent.Length} bytes)");
+                    Language f = JsonSerializer.Deserialize(jsonContent, LanguageJsonContext.Default.Language);
+                    if (f != null)
+                    {
+                        Instance = f;
+                        System.Diagnostics.Debug.WriteLine($"✓ Language loaded successfully from '{pathToLoad}'");
+                        System.Diagnostics.Debug.WriteLine($"✓ Search text: {Instance.GetModernOptionsGumpLanguage.Search}");
+                        return;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("✗ Deserialization returned null (culture-specific file)");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"✗ Failed to load language file '{pathToLoad}': {ex.Message}");
+                }
+            }
+            // 检查是否有语言文件
             if (File.Exists(languageFilePath))
             {
-                Language f = JsonSerializer.Deserialize(File.ReadAllText(languageFilePath), LanguageJsonContext.Default.Language);
-                Instance = f;
-                Save(); //To update language file with new additions as needed
+                try
+                {
+                    string jsonContent = ReadAllTextAuto(languageFilePath);
+                    System.Diagnostics.Debug.WriteLine($"Loading Language.json, size: {jsonContent.Length} bytes");
+                    
+                    Language f = JsonSerializer.Deserialize(jsonContent, LanguageJsonContext.Default.Language);
+                    if (f != null)
+                    {
+                        Instance = f;
+                        System.Diagnostics.Debug.WriteLine($"✓ Language loaded successfully");
+                        System.Diagnostics.Debug.WriteLine($"✓ Search text: {Instance.GetModernOptionsGumpLanguage.Search}");
+                        return;
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("✗ Deserialization returned null");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"✗ Failed to load Language.json: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                }
             }
             else
             {
-                CreateNewLanguageFile();
+                System.Diagnostics.Debug.WriteLine($"Language.json not found at: {languageFilePath}");
             }
+            
+            // 如果加载失败，创建默认语言文件
+            System.Diagnostics.Debug.WriteLine("Creating new English language file");
+            CreateNewLanguageFile();
         }
+
 
         private static void CreateNewLanguageFile()
         {
@@ -46,15 +104,60 @@ namespace ClassicUO.Configuration
 
             string defaultLanguage = JsonSerializer.Serialize(Instance, LanguageJsonContext.Default.Language);
             File.WriteAllText(languageFilePath, defaultLanguage);
+            _loadedLanguageFilePath = languageFilePath;
         }
 
         private static void Save()
         {
             string language = JsonSerializer.Serialize(Instance, LanguageJsonContext.Default.Language);
-            File.WriteAllText(languageFilePath, language);
+            string savePath = string.IsNullOrWhiteSpace(_loadedLanguageFilePath) ? languageFilePath : _loadedLanguageFilePath;
+            File.WriteAllText(savePath, language, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
 
         private static string languageFilePath => Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Language.json");
+
+        private static string ResolveLanguageFilePathForLoad()
+        {
+            string dataDir = Path.Combine(CUOEnviroment.ExecutablePath, "Data");
+            Directory.CreateDirectory(dataDir);
+
+            string uiName = CultureInfo.CurrentUICulture?.Name ?? string.Empty; // e.g. zh-CN
+            string two = CultureInfo.CurrentUICulture?.TwoLetterISOLanguageName ?? string.Empty; // e.g. zh
+
+            var specific = string.IsNullOrWhiteSpace(uiName) ? null : Path.Combine(dataDir, $"Language.{uiName}.json");
+            var twoLetter = string.IsNullOrWhiteSpace(two) ? null : Path.Combine(dataDir, $"Language.{two}.json");
+            var @default = Path.Combine(dataDir, "Language.json");
+
+            if (!string.IsNullOrWhiteSpace(specific) && File.Exists(specific)) return specific;
+            if (!string.IsNullOrWhiteSpace(twoLetter) && File.Exists(twoLetter)) return twoLetter;
+            return @default;
+        }
+
+        // Try strict UTF-8 first; if it fails, fallback to GBK (936) then rewrite as UTF-8 (no BOM)
+        private static string ReadAllTextAuto(string path)
+        {
+            byte[] bytes = File.ReadAllBytes(path);
+            try
+            {
+                return new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true).GetString(bytes);
+            }
+            catch (DecoderFallbackException)
+            {
+                try
+                {
+                    var gbk = Encoding.GetEncoding(936);
+                    string text = gbk.GetString(bytes);
+                    File.WriteAllText(path, text, new UTF8Encoding(false));
+                    System.Diagnostics.Debug.WriteLine($"Converted language file encoding to UTF-8: {path}");
+                    return text;
+                }
+                catch
+                {
+                    // last resort fallback to default decoder
+                    return File.ReadAllText(path);
+                }
+            }
+        }
     }
 
     public class ModernOptionsGumpLanguage
@@ -289,6 +392,8 @@ namespace ClassicUO.Configuration
         {
             public string NewMacro { get; set; } = "New Macro";
             public string DelMacro { get; set; } = "Delete Macro";
+            public string MoveUp { get; set; } = "Move Up";
+            public string MoveDown { get; set; } = "Move Down";
         }
 
         public class ToolTips
@@ -410,6 +515,54 @@ namespace ClassicUO.Configuration
             public string NewEntry { get; set; } = "New entry";
             public string NameOverheadEntryName { get; set; } = "Name overhead entry name";
             public string DeleteEntry { get; set; } = "Delete entry";
+            public string SetHotkey { get; set; } = "Set hotkey:";
+            public string UncheckAll { get; set; } = "Uncheck all";
+            public string CheckAll { get; set; } = "Check all";
+            public string Items { get; set; } = "Items";
+            public string Containers { get; set; } = "Containers";
+            public string Stackable { get; set; } = "Stackable";
+            public string Gold { get; set; } = "Gold";
+            public string LockedDown { get; set; } = "Locked down";
+            public string Moveable { get; set; } = "Moveable";
+            public string Immoveable { get; set; } = "Immoveable";
+            public string OtherItems { get; set; } = "Other items";
+            public string Corpses { get; set; } = "Corpses";
+            public string MonsterCorpses { get; set; } = "Monster corpses";
+            public string HumanoidCorpses { get; set; } = "Humanoid corpses";
+            public string MobilesByType { get; set; } = "Mobiles by type";
+            public string Humanoid { get; set; } = "Humanoid";
+            public string Monster { get; set; } = "Monster";
+            public string YourFollowers { get; set; } = "Your Followers";
+            public string Yourself { get; set; } = "Yourself";
+            public string ExcludeYourself { get; set; } = "Exclude yourself";
+            public string MobilesByNotoriety { get; set; } = "Mobiles by notoriety";
+            public string Innocent { get; set; } = "Innocent";
+            public string Allied { get; set; } = "Allied";
+            public string Attackable { get; set; } = "Attackable";
+            public string Criminal { get; set; } = "Criminal";
+            public string Enemy { get; set; } = "Enemy";
+            public string Murderer { get; set; } = "Murderer";
+            public string Invulnerable { get; set; } = "Invulnerable";
+            public string None { get; set; } = "None";
+            public string All { get; set; } = "All";
+            public string MobilesOnly { get; set; } = "Mobiles only";
+            public string ItemsOnly { get; set; } = "Items only";
+            public string MobilesAndCorpsesOnly { get; set; } = "Mobiles & Corpses only";
+            
+            /// <summary>
+            /// Translate a nameplate option name from English to current language
+            /// </summary>
+            public string TranslateOptionName(string englishName)
+            {
+                return englishName switch
+                {
+                    "All" => All,
+                    "Mobiles only" => MobilesOnly,
+                    "Items only" => ItemsOnly,
+                    "Mobiles & Corpses only" => MobilesAndCorpsesOnly,
+                    _ => englishName // Return original if no translation found
+                };
+            }
         }
 
         public class Cooldowns
@@ -616,6 +769,7 @@ namespace ClassicUO.Configuration
             public string AutoBuyEnable { get; set; } = "Enable auto buy feature";
             public string GraphicChangeFilter { get; set; } = "Graphic Filter";
             public string Hotkeys { get; set; } = "Hotkeys";
+            public HotkeysLanguage GetHotkeys { get; set; } = new HotkeysLanguage();
 
 
             #region VisibileLayers
@@ -623,7 +777,88 @@ namespace ClassicUO.Configuration
             public string VisLayersInfo { get; set; } = "These settings are to hide layers on in-game mobiles. Check the box to hide that layer.";
             public string OnlyForYourself { get; set; } = "Only for yourself";
             public string HiddenLayersEnabled { get; set; } = "Enable visible layer system";
+            
+            // Layer names
+            public string LayerOneHanded { get; set; } = "OneHanded";
+            public string LayerTwoHanded { get; set; } = "TwoHanded";
+            public string LayerShoes { get; set; } = "Shoes";
+            public string LayerPants { get; set; } = "Pants";
+            public string LayerShirt { get; set; } = "Shirt";
+            public string LayerHelmet { get; set; } = "Helmet";
+            public string LayerGloves { get; set; } = "Gloves";
+            public string LayerRing { get; set; } = "Ring";
+            public string LayerNecklace { get; set; } = "Necklace";
+            public string LayerWaist { get; set; } = "Waist";
+            public string LayerTorso { get; set; } = "Torso";
+            public string LayerBracelet { get; set; } = "Bracelet";
+            public string LayerTunic { get; set; } = "Tunic";
+            public string LayerEarrings { get; set; } = "Earrings";
+            public string LayerArms { get; set; } = "Arms";
+            public string LayerCloak { get; set; } = "Cloak";
+            public string LayerRobe { get; set; } = "Robe";
+            public string LayerSkirt { get; set; } = "Skirt";
+            public string LayerLegs { get; set; } = "Legs";
+            
+            /// <summary>
+            /// Translate a layer name to current language
+            /// </summary>
+            public string TranslateLayerName(string layerName)
+            {
+                return layerName switch
+                {
+                    "OneHanded" => LayerOneHanded,
+                    "TwoHanded" => LayerTwoHanded,
+                    "Shoes" => LayerShoes,
+                    "Pants" => LayerPants,
+                    "Shirt" => LayerShirt,
+                    "Helmet" => LayerHelmet,
+                    "Gloves" => LayerGloves,
+                    "Ring" => LayerRing,
+                    "Necklace" => LayerNecklace,
+                    "Waist" => LayerWaist,
+                    "Torso" => LayerTorso,
+                    "Bracelet" => LayerBracelet,
+                    "Tunic" => LayerTunic,
+                    "Earrings" => LayerEarrings,
+                    "Arms" => LayerArms,
+                    "Cloak" => LayerCloak,
+                    "Robe" => LayerRobe,
+                    "Skirt" => LayerSkirt,
+                    "Legs" => LayerLegs,
+                    _ => layerName
+                };
+            }
             #endregion
+        }
+        
+        public class HotkeysLanguage
+        {
+            public string Description { get; set; } = "These are not configurable here, this is a list of hotkeys built into the client.\nThere may be missing hotkeys, please report them on our Discord.";
+            public string MoveGumps { get; set; } = "Move gumps";
+            public string DetatchAnchoredGumps { get; set; } = "Detatch anchored gumps";
+            public string ShowLockButton { get; set; } = "Show lock button on various gumps";
+            public string HoldToCloseAnchored { get; set; } = "Hold to close anchored gumps";
+            public string LockGump { get; set; } = "Lock gump if it's lockable";
+            public string ShowGumpLockIcon { get; set; } = "Show gump lock icon where applicable";
+            public string AdjustGumpOpacity { get; set; } = "Adjust gump opacity";
+            public string GridMoveMultipleItems { get; set; } = "Grid container - move multiple items";
+            public string GridAddToAutoloot { get; set; } = "Grid container - add item to autoloot";
+            public string GridLockItem { get; set; } = "Grid container - lock item in slot";
+            public string GridCompareItem { get; set; } = "Grid container - compare item to equipped";
+            public string RemoveFromCounterbar { get; set; } = "Remove item from counterbar";
+            public string ClickToFollow { get; set; } = "Click a mobile to follow them";
+            public string ActivateChat { get; set; } = "Activate chat";
+            public string SplitItemStacks { get; set; } = "Split item stacks";
+            public string ShowNamePlates { get; set; } = "Show name plates";
+            public string Pathfinding { get; set; } = "Pathfinding";
+            public string BuySellAll { get; set; } = "Buy/Sell all of an item at a shop";
+            public string ItemDragLock { get; set; } = "Item drag - Lock in position";
+            public string ZoomWindow { get; set; } = "Zoom window";
+            public string ScrollMessages { get; set; } = "Scroll through messages sent in chat";
+            public string AutoStartXmlGump { get; set; } = "Auto-start xml gump from menu";
+            public string WorldMapPathfind { get; set; } = "World Map - Pathfind";
+            public string WorldMapAddMarker { get; set; } = "World Map - Add Marker";
+            public string ScreenshotGump { get; set; } = "Screen shot gump/tooltip only";
         }
     }
 

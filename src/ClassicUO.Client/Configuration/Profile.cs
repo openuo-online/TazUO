@@ -480,23 +480,23 @@ namespace ClassicUO.Configuration
 
         public bool DisplayPartyChatOverhead { get; set; } = true;
 
-        public string SelectedTTFJournalFont { get; set; } = "avadonian";
+        public string SelectedTTFJournalFont { get; set; } = "NotoSansSC-Regular";
         public int SelectedJournalFontSize { get; set; } = 20;
 
-        public string SelectedToolTipFont { get; set; } = "Roboto-Regular";
+        public string SelectedToolTipFont { get; set; } = "NotoSansSC-Regular";
         public int SelectedToolTipFontSize { get; set; } = 20;
 
-        public string GameWindowSideChatFont { get; set; } = "avadonian";
+        public string GameWindowSideChatFont { get; set; } = "NotoSansSC-Regular";
         public int GameWindowSideChatFontSize { get; set; } = 20;
 
-        public string OverheadChatFont { get; set; } = "avadonian";
+        public string OverheadChatFont { get; set; } = "NotoSansSC-Regular";
         public int OverheadChatFontSize { get; set; } = 20;
         public int OverheadChatWidth { get; set; } = 200;
 
-        public string NamePlateFont { get; set; } = "avadonian";
+        public string NamePlateFont { get; set; } = "NotoSansSC-Regular";
         public int NamePlateFontSize { get; set; } = 20;
 
-        public string OptionsFont { get; set; } = "Roboto-Regular";
+        public string OptionsFont { get; set; } = "NotoSansSC-Regular";
         public int OptionsFontSize { get; set; } = 18;
 
         public int TextBorderSize { get; set; } = 1;
@@ -555,7 +555,7 @@ namespace ClassicUO.Configuration
         [JsonConverter(typeof(Point2Converter))]
         public Point InfoBarSize { get; set; } = new Point(400, 20);
         public bool InfoBarLocked { get; set; } = false;
-        public string InfoBarFont { get; set; } = "Roboto-Regular";
+        public string InfoBarFont { get; set; } = "NotoSansSC-Regular";
         public int InfoBarFontSize { get; set; } = 18;
 
         public int LastJournalTab { get; set; } = 0;

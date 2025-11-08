@@ -63,7 +63,7 @@ public class BaseOptionsGump : Gump
         titleTextBox.Y = 7;
         Add(titleTextBox);
 
-        Control c = TextBox.GetOne("Search", ThemeSettings.FONT, 30, Color.White, TextBox.RTLOptions.Default());
+        Control c = TextBox.GetOne(Language.Instance.GetModernOptionsGumpLanguage.Search, ThemeSettings.FONT, 30, Color.White, TextBox.RTLOptions.Default());
         c.Y = 7;
         Add(c);
 

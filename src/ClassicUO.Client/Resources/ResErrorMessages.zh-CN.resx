@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>密码错误</value>
+  </data>
+  <data name="CharacterDoesNotExist" xml:space="preserve">
+    <value>此角色已不存在。你需要重新创建角色。</value>
+  </data>
+  <data name="CharacterAlreadyExists" xml:space="preserve">
+    <value>此角色已存在。
+正在进入游戏...</value>
+  </data>
+  <data name="ClientCouldNotAttachToServer" xml:space="preserve">
+    <value>客户端无法连接到游戏服务器。服务器可能已关闭，请稍等几分钟后重试。</value>
+  </data>
+  <data name="AnotherCharacterOnline" xml:space="preserve">
+    <value>此账号的另一个角色当前正在此世界中在线。你必须以该角色登录或等待其超时。</value>
+  </data>
+  <data name="ErrorInSynchronization" xml:space="preserve">
+    <value>登录服务器与此世界之间的同步发生错误。请关闭客户端并重试。</value>
+  </data>
+  <data name="IdleTooLong" xml:space="preserve">
+    <value>你已经挂机太久了。如果你在接下来的一分钟内不进行任何操作，你将被登出。</value>
+  </data>
+  <data name="CouldNotAttachServer" xml:space="preserve">
+    <value>无法连接到游戏服务器。</value>
+  </data>
+  <data name="CharacterTransferInProgress" xml:space="preserve">
+    <value>角色转移正在进行中。</value>
+  </data>
+  <data name="CharacterPasswordInvalid" xml:space="preserve">
+    <value>角色密码无效。</value>
+  </data>
+  <data name="ThatCharacterDoesNotExist" xml:space="preserve">
+    <value>该角色不存在。</value>
+  </data>
+  <data name="ThatCharacterIsBeingPlayed" xml:space="preserve">
+    <value>该角色正在游戏中。</value>
+  </data>
+  <data name="CharacterIsNotOldEnough" xml:space="preserve">
+    <value>该角色还不够老，无法删除。角色必须创建满7天才能删除。</value>
+  </data>
+  <data name="CharacterIsQueuedForBackup" xml:space="preserve">
+    <value>该角色当前正在备份队列中，无法删除。</value>
+  </data>
+  <data name="CouldntCarryOutYourRequest" xml:space="preserve">
+    <value>无法执行你的请求。</value>
+  </data>
+  <data name="YouCanNotPickThatUp" xml:space="preserve">
+    <value>你无法拾取那个物品。</value>
+  </data>
+  <data name="ThatIsTooFarAway" xml:space="preserve">
+    <value>那个物品太远了。</value>
+  </data>
+  <data name="ThatIsOutOfSight" xml:space="preserve">
+    <value>那个物品不在视线范围内。</value>
+  </data>
+  <data name="ThatItemDoesNotBelongToYou" xml:space="preserve">
+    <value>那个物品不属于你。你需要偷窃它。</value>
+  </data>
+  <data name="YouAreAlreadyHoldingAnItem" xml:space="preserve">
+    <value>你已经拿着一个物品了。</value>
+  </data>
+  <data name="IncorrectNamePassword" xml:space="preserve">
+    <value>用户名或密码错误。</value>
+  </data>
+  <data name="SomeoneIsAlreadyUsingThisAccount" xml:space="preserve">
+    <value>此账号已有人在使用。</value>
+  </data>
+  <data name="YourAccountHasBeenBlocked" xml:space="preserve">
+    <value>你的账号已被封禁。</value>
+  </data>
+  <data name="YourAccountCredentialsAreInvalid" xml:space="preserve">
+    <value>你的账号凭证无效。</value>
+  </data>
+  <data name="CommunicationProblem" xml:space="preserve">
+    <value>通信问题。</value>
+  </data>
+  <data name="TheIGRConcurrencyLimitHasBeenMet" xml:space="preserve">
+    <value>已达到IGR并发限制。</value>
+  </data>
+  <data name="TheIGRTimeLimitHasBeenMet" xml:space="preserve">
+    <value>已达到IGR时间限制。</value>
+  </data>
+  <data name="GeneralIGRAuthenticationFailure" xml:space="preserve">
+    <value>IGR认证失败。</value>
+  </data>
+  <data name="CouldntConnectToUO" xml:space="preserve">
+    <value>无法连接到Ultima Online。请稍后重试。</value>
+  </data>
+  <data name="ClientPathIsNotAValidUODirectory" xml:space="preserve">
+    <value>'{0}' 不是有效的UO目录</value>
+  </data>
+  <data name="NameIsInvalid" xml:space="preserve">
+    <value>名称无效</value>
+  </data>
+</root>

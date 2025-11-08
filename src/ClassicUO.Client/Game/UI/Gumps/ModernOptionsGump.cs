@@ -1,4 +1,4 @@
-﻿using ClassicUO.Assets;
+using ClassicUO.Assets;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
@@ -1279,7 +1279,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             content.AddToLeft
             (
-                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, "Move Up", ThemeSettings.BUTTON_FONT_COLOR)
+                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, lang.GetMacros.MoveUp, ThemeSettings.BUTTON_FONT_COLOR)
                 {
                     ButtonParameter = page,
                     IsSelectable = false
@@ -1308,7 +1308,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             content.AddToLeft
             (
-                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, "Move Down", ThemeSettings.BUTTON_FONT_COLOR)
+                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, lang.GetMacros.MoveDown, ThemeSettings.BUTTON_FONT_COLOR)
                 {
                     ButtonParameter = page,
                     IsSelectable = false
@@ -2480,7 +2480,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             content.AddToLeft
             (
-                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, lang.GetNamePlates.NewEntry, ThemeSettings.BUTTON_FONT_COLOR)
+                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.NewEntry, ThemeSettings.BUTTON_FONT_COLOR)
                 {
                     ButtonParameter = page,
                     IsSelectable = false
@@ -2491,7 +2491,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 EntryDialog dialog = new
                 (
-                    World, 250, 150, lang.GetNamePlates.NameOverheadEntryName, name =>
+                    World, 250, 150, Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.NameOverheadEntryName, name =>
                     {
                         if (string.IsNullOrWhiteSpace(name))
                         {
@@ -2538,7 +2538,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             content.AddToLeft
             (
-                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, lang.GetNamePlates.DeleteEntry, ThemeSettings.BUTTON_FONT_COLOR)
+                b = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.Activate, Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.DeleteEntry, ThemeSettings.BUTTON_FONT_COLOR)
                 {
                     ButtonParameter = page,
                     IsSelectable = false
@@ -2588,9 +2588,10 @@ namespace ClassicUO.Game.UI.Gumps
                     continue;
                 }
 
+                string translatedName = Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.TranslateOptionName(option.Name);
                 content.AddToLeft
                 (
-                    nb = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.SwitchPage, option.Name, ThemeSettings.BUTTON_FONT_COLOR)
+                    nb = new ModernButton(0, 0, content.LeftWidth, 40, ButtonAction.SwitchPage, translatedName, ThemeSettings.BUTTON_FONT_COLOR)
                     {
                         ButtonParameter = page + 1 + content.LeftArea.Children.Count,
                         Tag = option
@@ -4091,13 +4092,15 @@ namespace ClassicUO.Game.UI.Gumps
                     continue;
                 }
 
+                string translatedLayerName = lang.GetTazUO.TranslateLayerName(layer.ToString());
+                
                 if (!rightSide)
                 {
                     content.AddToRight
                     (
                         c = new CheckboxWithLabel
                         (
-                            layer.ToString(), 0, profile.HiddenLayers.Contains((int)layer), (b) =>
+                            translatedLayerName, 0, profile.HiddenLayers.Contains((int)layer), (b) =>
                             {
                                 if (b)
                                 {
@@ -4119,7 +4122,7 @@ namespace ClassicUO.Game.UI.Gumps
                     (
                         new CheckboxWithLabel
                         (
-                            layer.ToString(), 0, profile.HiddenLayers.Contains((int)layer), (b) =>
+                            translatedLayerName, 0, profile.HiddenLayers.Contains((int)layer), (b) =>
                             {
                                 if (b)
                                 {
@@ -4149,11 +4152,13 @@ namespace ClassicUO.Game.UI.Gumps
             content.AddToLeft(SubCategoryButton(lang.GetTazUO.Hotkeys, page, content.LeftWidth));
             content.ResetRightSide();
 
+            var hotkeys = lang.GetTazUO.GetHotkeys;
+            
             content.AddToRight
             (
                 TextBox.GetOne
                 (
-                    "These are not configurable here, this is a list of hotkeys built into the client.\nThere may be missing hotkeys, please report them on our Discord.",
+                    hotkeys.Description,
                     ThemeSettings.FONT, ThemeSettings.STANDARD_TEXT_SIZE, ThemeSettings.TEXT_FONT_COLOR, TextBox.RTLOptions.Default(content.RightWidth - 15)
                 ), true, page
             );
@@ -4163,45 +4168,45 @@ namespace ClassicUO.Game.UI.Gumps
             int ewidth = content.RightWidth - 15;
 
             //Gumps ish
-            content.AddToRight(GenHotKeyDisplay("Move gumps", "ALT", ewidth, ProfileManager.CurrentProfile.HoldAltToMoveGumps), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.MoveGumps, "ALT", ewidth, ProfileManager.CurrentProfile.HoldAltToMoveGumps), true, page);
 
-            content.AddToRight(GenHotKeyDisplay("Detatch anchored gumps", "ALT", ewidth, ProfileManager.CurrentProfile.HoldAltToMoveGumps), true, page);
-            content.AddToRight(GenHotKeyDisplay("Show lock button on various gumps", "ALT", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Hold to close anchored gumps", "ALT", ewidth, ProfileManager.CurrentProfile.HoldDownKeyAltToCloseAnchored), true, page);
-            content.AddToRight(GenHotKeyDisplay("Lock gump if it's lockable", "ALT CTRL CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Show gump lock icon where applicable", "ALT HOVER", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Adjust gump opacity", "ALT SCROLL-WHEEL", ewidth, ProfileManager.CurrentProfile.EnableAlphaScrollingOnGumps), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.DetatchAnchoredGumps, "ALT", ewidth, ProfileManager.CurrentProfile.HoldAltToMoveGumps), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ShowLockButton, "ALT", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.HoldToCloseAnchored, "ALT", ewidth, ProfileManager.CurrentProfile.HoldDownKeyAltToCloseAnchored), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.LockGump, "ALT CTRL CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ShowGumpLockIcon, "ALT HOVER", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.AdjustGumpOpacity, "ALT SCROLL-WHEEL", ewidth, ProfileManager.CurrentProfile.EnableAlphaScrollingOnGumps), true, page);
 
             //Grid container
-            content.AddToRight(GenHotKeyDisplay("Grid container - move multiple items", "ALT CLICK-ITEM", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.GridMoveMultipleItems, "ALT CLICK-ITEM", ewidth), true, page);
 
             content.AddToRight
             (
                 GenHotKeyDisplay
                 (
-                    "Grid container - add item to autoloot", "SHIFT CLICK-ITEM", ewidth,
+                    hotkeys.GridAddToAutoloot, "SHIFT CLICK-ITEM", ewidth,
                     ProfileManager.CurrentProfile.EnableAutoLoot && !ProfileManager.CurrentProfile.HoldShiftForContext && !ProfileManager.CurrentProfile.HoldShiftToSplitStack
                 ), true, page
             );
 
-            content.AddToRight(GenHotKeyDisplay("Grid container - lock item in slot", "CTRL CLICK-ITEM", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Grid container - compare item to equipped", "CTRL HOVER", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.GridLockItem, "CTRL CLICK-ITEM", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.GridCompareItem, "CTRL HOVER", ewidth), true, page);
 
 
-            content.AddToRight(GenHotKeyDisplay("Remove item from counterbar", "ALT RIGHT-CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Click a mobile to follow them", "ALT CLICK", ewidth, !ProfileManager.CurrentProfile.DisableAutoFollowAlt), true, page);
-            content.AddToRight(GenHotKeyDisplay("Activate chat", "ENTER", ewidth, ProfileManager.CurrentProfile.ActivateChatAfterEnter), true, page);
-            content.AddToRight(GenHotKeyDisplay("Split item stacks", "SHIFT", ewidth, ProfileManager.CurrentProfile.HoldShiftToSplitStack), true, page);
-            content.AddToRight(GenHotKeyDisplay("Show name plates", "CTRL SHIFT", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Pathfinding", "SHIFT CLICK/DOUBLE-CLICK", ewidth, ProfileManager.CurrentProfile.UseShiftToPathfind), true, page);
-            content.AddToRight(GenHotKeyDisplay("Buy/Sell all of an item at a shop", "SHIFT DOUBLE-CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Item drag - Lock in position", "CTRL SCROL-WHEEL", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Zoom window", "CTRL SCROL-WHEEL", ewidth, ProfileManager.CurrentProfile.EnableMousewheelScaleZoom), true, page);
-            content.AddToRight(GenHotKeyDisplay("Scroll through messages sent in chat", "CTRL q/w", ewidth, !ProfileManager.CurrentProfile.DisableCtrlQWBtn), true, page);
-            content.AddToRight(GenHotKeyDisplay("Auto-start xml gump from menu", "CTRL CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("World Map - Pathfind", "CTRL RIGHT-CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("World Map - Add Marker", "CTRL CLICK", ewidth), true, page);
-            content.AddToRight(GenHotKeyDisplay("Screen shot gump/tooltip only", "CTRL PRINTSCREEN", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.RemoveFromCounterbar, "ALT RIGHT-CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ClickToFollow, "ALT CLICK", ewidth, !ProfileManager.CurrentProfile.DisableAutoFollowAlt), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ActivateChat, "ENTER", ewidth, ProfileManager.CurrentProfile.ActivateChatAfterEnter), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.SplitItemStacks, "SHIFT", ewidth, ProfileManager.CurrentProfile.HoldShiftToSplitStack), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ShowNamePlates, "CTRL SHIFT", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.Pathfinding, "SHIFT CLICK/DOUBLE-CLICK", ewidth, ProfileManager.CurrentProfile.UseShiftToPathfind), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.BuySellAll, "SHIFT DOUBLE-CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ItemDragLock, "CTRL SCROL-WHEEL", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ZoomWindow, "CTRL SCROL-WHEEL", ewidth, ProfileManager.CurrentProfile.EnableMousewheelScaleZoom), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ScrollMessages, "CTRL q/w", ewidth, !ProfileManager.CurrentProfile.DisableCtrlQWBtn), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.AutoStartXmlGump, "CTRL CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.WorldMapPathfind, "CTRL RIGHT-CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.WorldMapAddMarker, "CTRL CLICK", ewidth), true, page);
+            content.AddToRight(GenHotKeyDisplay(hotkeys.ScreenshotGump, "CTRL PRINTSCREEN", ewidth), true, page);
 
             #endregion
 
@@ -5249,7 +5254,7 @@ namespace ClassicUO.Game.UI.Gumps
                 CanMove = true;
 
                 Control c;
-                c = AddLabel("Set hotkey:");
+                c = AddLabel(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.SetHotkey);
 
                 _hotkeyBox = new HotkeyBox
                 {
@@ -5263,7 +5268,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Add
                 (
-                    c = new ModernButton(0, _hotkeyBox.Height + 3, 100, 40, ButtonAction.Activate, "Uncheck all", ThemeSettings.BUTTON_FONT_COLOR)
+                    c = new ModernButton(0, _hotkeyBox.Height + 3, 100, 40, ButtonAction.Activate, Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.UncheckAll, ThemeSettings.BUTTON_FONT_COLOR)
                     {
                         ButtonParameter = (int)ButtonType.UncheckAll,
                         IsSelectable = false
@@ -5272,7 +5277,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Add
                 (
-                    new ModernButton(c.Bounds.Right + 5, _hotkeyBox.Height + 3, 100, 40, ButtonAction.Activate, "Check all", ThemeSettings.BUTTON_FONT_COLOR)
+                    new ModernButton(c.Bounds.Right + 5, _hotkeyBox.Height + 3, 100, 40, ButtonAction.Activate, Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.CheckAll, ThemeSettings.BUTTON_FONT_COLOR)
                     {
                         ButtonParameter = (int)ButtonType.CheckAll,
                         IsSelectable = false
@@ -5293,64 +5298,64 @@ namespace ClassicUO.Game.UI.Gumps
 
                 PositionHelper.Y = 100;
 
-                c = AddLabel("Items");
+                c = AddLabel(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Items);
                 PositionHelper.PositionControl(c);
 
-                c = AddCheckbox("Containers", NameOverheadOptions.Containers);
+                c = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Containers, NameOverheadOptions.Containers);
                 PositionHelper.PositionControl(c);
 
-                c = AddCheckbox("Gold", NameOverheadOptions.Gold);
+                c = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Gold, NameOverheadOptions.Gold);
                 PositionHelper.PositionExact(c, rightPosX, PositionHelper.LAST_Y);
 
-                PositionHelper.PositionControl(AddCheckbox("Stackable", NameOverheadOptions.Stackable));
-                PositionHelper.PositionExact(AddCheckbox("Locked down", NameOverheadOptions.LockedDown), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Stackable, NameOverheadOptions.Stackable));
+                PositionHelper.PositionExact(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.LockedDown, NameOverheadOptions.LockedDown), rightPosX, PositionHelper.LAST_Y);
 
-                PositionHelper.PositionControl(AddCheckbox("Moveable", NameOverheadOptions.Moveable));
-                PositionHelper.PositionExact(AddCheckbox("Immoveable", NameOverheadOptions.Immoveable), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Moveable, NameOverheadOptions.Moveable));
+                PositionHelper.PositionExact(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Immoveable, NameOverheadOptions.Immoveable), rightPosX, PositionHelper.LAST_Y);
 
-                PositionHelper.PositionControl(AddCheckbox("Other items", NameOverheadOptions.Other));
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.OtherItems, NameOverheadOptions.Other));
 
 
                 PositionHelper.BlankLine();
-                PositionHelper.PositionControl(AddLabel("Corpses"));
+                PositionHelper.PositionControl(AddLabel(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Corpses));
 
-                PositionHelper.PositionControl(AddCheckbox("Monster corpses", NameOverheadOptions.MonsterCorpses));
-                PositionHelper.PositionExact(AddCheckbox("Humanoid corpses", NameOverheadOptions.HumanoidCorpses), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.MonsterCorpses, NameOverheadOptions.MonsterCorpses));
+                PositionHelper.PositionExact(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.HumanoidCorpses, NameOverheadOptions.HumanoidCorpses), rightPosX, PositionHelper.LAST_Y);
                 //AddCheckbox("Own corpses", NameOverheadOptions.OwnCorpses, 0, y);
 
 
                 PositionHelper.BlankLine();
-                PositionHelper.PositionControl(AddLabel("Mobiles by type"));
+                PositionHelper.PositionControl(AddLabel(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.MobilesByType));
 
-                PositionHelper.PositionControl(AddCheckbox("Humanoid", NameOverheadOptions.Humanoid));
-                PositionHelper.PositionExact(AddCheckbox("Monster", NameOverheadOptions.Monster), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Humanoid, NameOverheadOptions.Humanoid));
+                PositionHelper.PositionExact(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Monster, NameOverheadOptions.Monster), rightPosX, PositionHelper.LAST_Y);
 
-                PositionHelper.PositionControl(AddCheckbox("Your Followers", NameOverheadOptions.OwnFollowers));
-                PositionHelper.PositionExact(AddCheckbox("Yourself", NameOverheadOptions.Self), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.YourFollowers, NameOverheadOptions.OwnFollowers));
+                PositionHelper.PositionExact(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Yourself, NameOverheadOptions.Self), rightPosX, PositionHelper.LAST_Y);
 
-                PositionHelper.PositionControl(AddCheckbox("Exclude yourself", NameOverheadOptions.ExcludeSelf));
+                PositionHelper.PositionControl(AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.ExcludeYourself, NameOverheadOptions.ExcludeSelf));
 
 
                 PositionHelper.BlankLine();
-                PositionHelper.PositionControl(AddLabel("Mobiles by notoriety"));
+                PositionHelper.PositionControl(AddLabel(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.MobilesByNotoriety));
 
                 CheckboxWithLabel cb;
-                PositionHelper.PositionControl(cb = AddCheckbox("Innocent", NameOverheadOptions.Innocent));
+                PositionHelper.PositionControl(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Innocent, NameOverheadOptions.Innocent));
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.InnocentHue;
-                PositionHelper.PositionExact(cb = AddCheckbox("Allied", NameOverheadOptions.Ally), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionExact(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Allied, NameOverheadOptions.Ally), rightPosX, PositionHelper.LAST_Y);
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.FriendHue;
 
-                PositionHelper.PositionControl(cb = AddCheckbox("Attackable", NameOverheadOptions.Gray));
+                PositionHelper.PositionControl(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Attackable, NameOverheadOptions.Gray));
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.CanAttackHue;
-                PositionHelper.PositionExact(cb = AddCheckbox("Criminal", NameOverheadOptions.Criminal), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionExact(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Criminal, NameOverheadOptions.Criminal), rightPosX, PositionHelper.LAST_Y);
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.CriminalHue;
 
-                PositionHelper.PositionControl(cb = AddCheckbox("Enemy", NameOverheadOptions.Enemy));
+                PositionHelper.PositionControl(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Enemy, NameOverheadOptions.Enemy));
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.EnemyHue;
-                PositionHelper.PositionExact(cb = AddCheckbox("Murderer", NameOverheadOptions.Murderer), rightPosX, PositionHelper.LAST_Y);
+                PositionHelper.PositionExact(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Murderer, NameOverheadOptions.Murderer), rightPosX, PositionHelper.LAST_Y);
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.MurdererHue;
 
-                PositionHelper.PositionControl(cb = AddCheckbox("Invulnerable", NameOverheadOptions.Invulnerable));
+                PositionHelper.PositionControl(cb = AddCheckbox(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.Invulnerable, NameOverheadOptions.Invulnerable));
                 cb.TextLabel.Hue = ProfileManager.CurrentProfile.InvulnerableHue;
             }
 
@@ -5520,3 +5525,4 @@ namespace ClassicUO.Game.UI.Gumps
         }
     }
 }
+

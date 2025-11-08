@@ -348,10 +348,10 @@ namespace ClassicUO.Game.Managers
             (
                 new[]
                 {
-                    new NameOverheadOption("All", int.MaxValue),
-                    new NameOverheadOption("Mobiles only", (int)NameOverheadOptions.AllMobiles),
-                    new NameOverheadOption("Items only", (int)NameOverheadOptions.AllItems),
-                    new NameOverheadOption("Mobiles & Corpses only", (int)NameOverheadOptions.MobilesAndCorpses),
+                    new NameOverheadOption(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.All, int.MaxValue),
+                    new NameOverheadOption(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.MobilesOnly, (int)NameOverheadOptions.AllMobiles),
+                    new NameOverheadOption(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.ItemsOnly, (int)NameOverheadOptions.AllItems),
+                    new NameOverheadOption(Language.Instance.GetModernOptionsGumpLanguage.GetNamePlates.MobilesAndCorpsesOnly, (int)NameOverheadOptions.MobilesAndCorpses),
                 }
             );
 

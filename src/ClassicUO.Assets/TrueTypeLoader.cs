@@ -69,15 +69,79 @@ namespace ClassicUO.Assets
             if (!Directory.Exists(fontPath))
                 Directory.CreateDirectory(fontPath);
 
-            foreach (string ttf in Directory.GetFiles(fontPath, "*.ttf"))
-            {
-                var fontSystem = new FontSystem(settings);
-                fontSystem.AddFont(File.ReadAllBytes(ttf));
-
-                _fonts[Path.GetFileNameWithoutExtension(ttf)] = fontSystem;
-            }
-
+            // 首先加载嵌入的字体
             LoadEmbeddedFonts();
+
+            // 然后加载运行时字体目录中的字体（支持.ttf和.otf）
+            byte[] chineseFallbackFont = FindChineseFallbackFont();
+
+            foreach (string fontFile in Directory.GetFiles(fontPath, "*.*")
+                .Where(f => f.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || 
+                           f.EndsWith(".otf", StringComparison.OrdinalIgnoreCase)))
+            {
+                try
+                {
+                    string fontName = Path.GetFileNameWithoutExtension(fontFile);
+                    byte[] fontBytes = File.ReadAllBytes(fontFile);
+
+#if DEBUG
+                    Log.Trace($"Loading runtime font: {fontName} ({fontBytes.Length} bytes)");
+#endif
+
+                    var fontSystem = new FontSystem(settings);
+                    fontSystem.AddFont(fontBytes);
+
+                    // 如果有中文回退字体且当前字体不是中文字体，添加为回退
+                    if (chineseFallbackFont != null && fontBytes != chineseFallbackFont)
+                    {
+                        try
+                        {
+                            fontSystem.AddFont(chineseFallbackFont);
+#if DEBUG
+                            Log.Trace($"  Added Chinese fallback font to {fontName}");
+#endif
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Warn($"Failed to add Chinese fallback to {fontName}: {ex.Message}");
+                        }
+                    }
+
+                    _fonts[fontName] = fontSystem;
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Failed to load font {fontFile}: {ex.Message}");
+                }
+            }
+        }
+
+        private byte[] FindChineseFallbackFont()
+        {
+            // 在已加载的字体中查找中文字体
+            string fontPath = Path.Combine(AppContext.BaseDirectory, "Fonts");
+            
+            foreach (string fontFile in Directory.GetFiles(fontPath, "*.*")
+                .Where(f => f.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) || 
+                           f.EndsWith(".otf", StringComparison.OrdinalIgnoreCase)))
+            {
+                string fontName = Path.GetFileNameWithoutExtension(fontFile).ToLower();
+                FileInfo fi = new FileInfo(fontFile);
+                
+                // 检测中文字体（通过名称或文件大小）
+                if (fontName.Contains("noto") || fontName.Contains("source") || 
+                    fontName.Contains("chinese") || fontName.Contains("sc") ||
+                    fontName.Contains("hans") || fontName.Contains("cjk") ||
+                    fi.Length > 1000000) // 大于1MB的字体可能包含中文
+                {
+#if DEBUG
+                    Log.Trace($"Found Chinese fallback font: {fontName} ({fi.Length} bytes)");
+#endif
+                    return File.ReadAllBytes(fontFile);
+                }
+            }
+            
+            return null;
         }
 
         private void LoadEmbeddedFonts()
@@ -96,6 +160,10 @@ namespace ClassicUO.Assets
                                         .Where(name => name.StartsWith(fontAssetFolder))
                                         .ToArray();
 
+            // 首先加载所有字体到字典中
+            Dictionary<string, byte[]> fontBytes = new Dictionary<string, byte[]>();
+            byte[] chineseFallbackFont = null;
+
             foreach (string resourceName in resourceNames)
             {
                 Stream stream = assembly.GetManifestResourceStream(resourceName);
@@ -104,21 +172,59 @@ namespace ClassicUO.Assets
                     {
                         string[] rnameParts = resourceName.Split('.');
                         string fname = rnameParts[rnameParts.Length - 2];
-#if DEBUG
-                        Log.Trace($"Loaded embedded font: {fname}");
-#endif
+                        
                         var memoryStream = new MemoryStream();
                         stream.CopyTo(memoryStream);
-
                         byte[] filebytes = memoryStream.ToArray();
-
-                        if (fname == EMBEDDED_FONT) //Special case for ImGui
-                            ImGuiFont = filebytes;
-
-                        var fontSystem = new FontSystem(settings);
-                        fontSystem.AddFont(filebytes);
-                        _fonts[fname] = fontSystem;
+                        
+                        fontBytes[fname] = filebytes;
+                        
+                        // 检测中文字体（通常文件较大，>1MB）
+                        if (fname.Contains("Noto") || fname.Contains("Source") || 
+                            fname.Contains("Chinese") || fname.Contains("SC") ||
+                            filebytes.Length > 1000000) // 大于1MB的字体可能包含中文
+                        {
+                            chineseFallbackFont = filebytes;
+#if DEBUG
+                            Log.Trace($"Detected Chinese font: {fname} ({filebytes.Length} bytes)");
+#endif
+                        }
                     }
+            }
+
+            // 现在创建FontSystem，为每个字体添加中文回退
+            foreach (var kvp in fontBytes)
+            {
+                string fname = kvp.Key;
+                byte[] filebytes = kvp.Value;
+
+#if DEBUG
+                Log.Trace($"Loading embedded font: {fname}");
+#endif
+
+                if (fname == EMBEDDED_FONT) //Special case for ImGui
+                    ImGuiFont = filebytes;
+
+                var fontSystem = new FontSystem(settings);
+                fontSystem.AddFont(filebytes);
+                
+                // 如果有中文字体且当前字体不是中文字体，添加为回退
+                if (chineseFallbackFont != null && filebytes != chineseFallbackFont)
+                {
+                    try
+                    {
+                        fontSystem.AddFont(chineseFallbackFont);
+#if DEBUG
+                        Log.Trace($"  Added Chinese fallback font to {fname}");
+#endif
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warn($"Failed to add Chinese fallback to {fname}: {ex.Message}");
+                    }
+                }
+                
+                _fonts[fname] = fontSystem;
             }
         }
 

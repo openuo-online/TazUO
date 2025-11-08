@@ -86,10 +86,18 @@
     <DataFiles_osx Include="$(ProjectDir)..\..\external\osx\*.*" />
     <DataFiles_osx-arm Include="$(ProjectDir)..\..\external\osx-arm\*.*" />
     <DataFiles_vulkan Include="$(ProjectDir)..\..\external\vulkan\icd.d\*.*" />
+    <DataFiles_fonts Include="$(ProjectDir)..\..\Data\Fonts\*.*" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Game\Managers\DefaultSpellIndicatorConfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Language.zh-CN.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Data\Language.zh-CN.json</Link>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -154,6 +162,7 @@
     <Copy SourceFiles="@(DataFiles_osx)" DestinationFolder="$(TargetDir)\osx\" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(DataFiles_osx-arm)" DestinationFolder="$(TargetDir)\osx-arm\" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(DataFiles_vulkan)" DestinationFolder="$(TargetDir)\vulkan\icd.d\" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DataFiles_fonts)" DestinationFolder="$(TargetDir)\Fonts\" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="CreateVersionFile_publish" AfterTargets="Publish">
@@ -168,6 +177,7 @@
     <Copy SourceFiles="@(DataFiles_osx)" DestinationFolder="$(PublishDir)\osx\" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(DataFiles_vulkan)" DestinationFolder="$(PublishDir)\vulkan\icd.d\" SkipUnchangedFiles="true" />
     <Copy SourceFiles="@(DataFiles_osx-arm)" DestinationFolder="$(PublishDir)\osx-arm\" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(DataFiles_fonts)" DestinationFolder="$(PublishDir)\Fonts\" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>
