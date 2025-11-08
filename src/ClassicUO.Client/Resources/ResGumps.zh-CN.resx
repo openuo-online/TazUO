@@ -701,10 +701,10 @@
     <value>ClassicUO版本{0}</value>
   </data>
   <data name="Autologin" xml:space="preserve">
-    <value>自动登录</value>
+    <value>Autologin</value>
   </data>
   <data name="SaveAccount" xml:space="preserve">
-    <value>保存账户</value>
+    <value>Save Account</value>
   </data>
   <data name="By" xml:space="preserve">
     <value>由</value>

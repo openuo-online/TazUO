@@ -4039,7 +4039,7 @@ namespace ClassicUO.Game.UI.Gumps
             content.AddToRight(new CheckboxWithLabel(lang.GetTazUO.GlobalScaling, 0, profile.GlobalScaling, b => profile.GlobalScaling = b), true, page);
 
             SliderWithLabel s;
-            content.AddToRight(s = new SliderWithLabel(lang.GetTazUO.GlobalScale, 0, ThemeSettings.SLIDER_WIDTH, 50, 175, (int)(profile.GlobalScale * 100), null), true, page);
+            content.AddToRight(s = new SliderWithLabel(lang.GetTazUO.GlobalScale, 0, ThemeSettings.SLIDER_WIDTH, 50, 200, (int)(profile.GlobalScale * 100), null), true, page);
 
             ModernButton b;
             content.AddToRight(b = new ModernButton(s.X + s.Width + 75, s.Y - 20, 75, 40, ButtonAction.Activate, "Apply", ThemeSettings.BUTTON_FONT_COLOR), false, page);
