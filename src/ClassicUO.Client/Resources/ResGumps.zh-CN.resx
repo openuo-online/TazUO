@@ -689,13 +689,13 @@
     <value>永久删除角色"{0}"？</value>
   </data>
   <data name="Password" xml:space="preserve">
-    <value>密码</value>
+    <value>Password</value>
   </data>
   <data name="Account" xml:space="preserve">
-    <value>账户名</value>
+    <value>Account</value>
   </data>
   <data name="LoginToUO" xml:space="preserve">
-    <value>登录到Ultima Online</value>
+    <value>Login to Ultima Online</value>
   </data>
   <data name="CUOVersion0" xml:space="preserve">
     <value>ClassicUO版本{0}</value>
@@ -734,7 +734,7 @@
     <value>回复：</value>
   </data>
   <data name="Index" xml:space="preserve">
-    <value>索引</value>
+    <value>Index</value>
   </data>
   <data name="PrimaryAbilityIcon" xml:space="preserve">
     <value>主要技能图标</value>
@@ -818,7 +818,7 @@
   <data name="SaveExistingChanges" xml:space="preserve"><value>保存现有更改并最终确定设计</value></data>
   <data name="Revert" xml:space="preserve"><value>还原</value></data>
   <data name="RevertYourDesign" xml:space="preserve"><value>将进行中的设计还原为当前可见的最终设计</value></data>
-  <data name="ObjectInformation" xml:space="preserve"><value>对象信息</value></data>
+  <data name="ObjectInformation" xml:space="preserve"><value>Object Information</value></data>
   <data name="Dump" xml:space="preserve"><value>转储</value></data>
   <data name="DarkMode" xml:space="preserve"><value>暗黑模式</value></data>
   <data name="All" xml:space="preserve"><value>全部</value></data>
@@ -840,7 +840,7 @@
   <data name="Decline" xml:space="preserve"><value>拒绝</value></data>
   <data name="P0HasInvitedYouToParty" xml:space="preserve"><value>{0}邀请你加入队伍</value></data>
   <data name="NoName" xml:space="preserve"><value>无名</value></data>
-  <data name="Passive" xml:space="preserve"><value>被动</value></data>
+  <data name="Passive" xml:space="preserve"><value>Passive</value></data>
   <data name="Item0Price1" xml:space="preserve"><value>{0}价格{1}金币</value></data>
   <data name="Name" xml:space="preserve"><value>名称：</value></data>
   <data name="Real" xml:space="preserve"><value>Real</value></data>
@@ -848,9 +848,9 @@
   <data name="Cap" xml:space="preserve"><value>Cap</value></data>
   <data name="Total" xml:space="preserve"><value>总计：</value></data>
   <data name="TithingPointsAvailable" xml:space="preserve"><value>可用什一税点数：</value></data>
-  <data name="Abilities" xml:space="preserve"><value>技能</value></data>
+  <data name="Abilities" xml:space="preserve"><value>Abilities</value></data>
   <data name="Activated" xml:space="preserve"><value>已激活</value></data>
-  <data name="Reagents" xml:space="preserve"><value>试剂：</value></data>
+  <data name="Reagents" xml:space="preserve"><value>Reagents:</value></data>
   <data name="Upkeep0Mana1MinSkill2" xml:space="preserve"><value>维持消耗：{0} 法力消耗：{0} 最低技能：{0}</value></data>
   <data name="ManaCost0MinSkill1" xml:space="preserve"><value>法力消耗：{0} 最低技能：{1}</value></data>
   <data name="ShowReal" xml:space="preserve"><value>- Show Real</value></data>
@@ -936,10 +936,10 @@
   <data name="Add" xml:space="preserve"><value>添加</value></data>
   <data name="ThisKeyCombinationAlreadyExists" xml:space="preserve"><value>此按键组合已存在。组合被使用于：{0}</value></data>
   <data name="ImpossibleToDefineTheClientVersion0" xml:space="preserve"><value>无法定义客户端版本。客户端版本：'{0}'</value></data>
-  <data name="SelectWhichShardToPlayOn" xml:space="preserve"><value>选择要游玩的服务器：</value></data>
-  <data name="Latency" xml:space="preserve"><value>延迟：</value></data>
-  <data name="PacketLoss" xml:space="preserve"><value>丢包率：</value></data>
-  <data name="SortBy" xml:space="preserve"><value>排序方式：</value></data>
+  <data name="SelectWhichShardToPlayOn" xml:space="preserve"><value>Select which shard to play on:</value></data>
+  <data name="Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="PacketLoss" xml:space="preserve"><value>Packet Loss:</value></data>
+  <data name="SortBy" xml:space="preserve"><value>Sort by:</value></data>
   <data name="Localisation" xml:space="preserve"><value>本地化</value></data>
   <data name="ChangingLanguageNeedsRestartToTakeEffect" xml:space="preserve"><value>更改语言需要重启才能生效</value></data>
   <data name="Strength" xml:space="preserve"><value>力量</value></data>

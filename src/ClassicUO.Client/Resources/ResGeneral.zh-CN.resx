@@ -100,8 +100,8 @@
   </data>
   <!-- 游戏消息 -->
   <data name="ThisMayFlagYouCriminal" xml:space="preserve">
-    <value>这可能会让你
-变成罪犯！</value>
+    <value>This may flag
+you criminal!</value>
   </data>
   <data name="GrabBagNotFound" xml:space="preserve">
     <value>未找到拾取袋，设置为背包。</value>
