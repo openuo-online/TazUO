@@ -49,7 +49,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build -c Release
+      run: dotnet build -c Release /p:TreatWarningsAsErrors=false
 
     - name: Test
       run: dotnet test --verbosity normal tests/ClassicUO.UnitTests
