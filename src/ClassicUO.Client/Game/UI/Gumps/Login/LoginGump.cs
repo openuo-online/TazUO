@@ -149,7 +149,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(string.Format("TazUO Version {0}", CUOEnviroment.Version), false, 0x034E, font: 9)
+                    new Label(string.Format("OpenUO Version {0}", CUOEnviroment.Version), false, 0x034E, font: 9)
                     {
                         X = 286,
                         Y = 465
@@ -389,87 +389,87 @@ namespace ClassicUO.Game.UI.Gumps.Login
             _checkboxAutologin.IsChecked = Settings.GlobalSettings.AutoLogin;
 
 
-            Add
-            (
-                new HtmlControl
-                (
-                    505,
-                    420,
-                    150,
-                    15,
-                    false,
-                    false,
-                    false,
-                    "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://www.classicuo.eu/support.php\">Support ClassicUO!",
-                    0x32,
-                    true,
-                    isunicode: true,
-                    style: FontStyle.BlackBorder
-                )
-            );
+            // Add
+            // (
+            //     new HtmlControl
+            //     (
+            //         505,
+            //         420,
+            //         150,
+            //         15,
+            //         false,
+            //         false,
+            //         false,
+            //         "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://www.classicuo.eu/support.php\">Support ClassicUO!",
+            //         0x32,
+            //         true,
+            //         isunicode: true,
+            //         style: FontStyle.BlackBorder
+            //     )
+            // );
 
 
-            Add
-            (
-                new HtmlControl
-                (
-                    505,
-                    440,
-                    100,
-                    15,
-                    false,
-                    false,
-                    false,
-                    "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://www.classicuo.eu\">CUO Website",
-                    0x32,
-                    true,
-                    isunicode: true,
-                    style: FontStyle.BlackBorder
-                )
-            );
+            // Add
+            // (
+            //     new HtmlControl
+            //     (
+            //         505,
+            //         440,
+            //         100,
+            //         15,
+            //         false,
+            //         false,
+            //         false,
+            //         "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://www.classicuo.eu\">CUO Website",
+            //         0x32,
+            //         true,
+            //         isunicode: true,
+            //         style: FontStyle.BlackBorder
+            //     )
+            // );
 
-            Add
-            (
-                new HtmlControl
-                (
-                    505,
-                    460,
-                    100,
-                    15,
-                    false,
-                    false,
-                    false,
-                    "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://discord.gg/VdyCpjQ\">CUO Discord",
-                    0x32,
-                    true,
-                    isunicode: true,
-                    style: FontStyle.BlackBorder
-                )
-            );
+            // Add
+            // (
+            //     new HtmlControl
+            //     (
+            //         505,
+            //         460,
+            //         100,
+            //         15,
+            //         false,
+            //         false,
+            //         false,
+            //         "<body link=\"#FF00FF00\" vlink=\"#FF00FF00\" ><a href=\"https://discord.gg/VdyCpjQ\">CUO Discord",
+            //         0x32,
+            //         true,
+            //         isunicode: true,
+            //         style: FontStyle.BlackBorder
+            //     )
+            // );
 
-            TextBox _;
-            HitBox _hit;
-            var options = TextBox.RTLOptions.Default();
-            options.Width = 200;
-            Add(_ = TextBox.GetOne("TazUO Wiki", TrueTypeLoader.EMBEDDED_FONT, 15, Color.Orange, options));
-            _.X = 30;
-            _.Y = 420;
-            _.AcceptMouseInput = true;
-            Add(_hit = new HitBox(_.X, _.Y, _.MeasuredSize.X, _.MeasuredSize.Y));
-            _hit.MouseUp += (s, e) =>
-            {
-                Utility.Platforms.PlatformHelper.LaunchBrowser("https://github.com/PlayTazUO/TazUO/wiki");
-            };
+            // TextBox _;
+            // HitBox _hit;
+            // var options = TextBox.RTLOptions.Default();
+            // options.Width = 200;
+            // Add(_ = TextBox.GetOne("TazUO Wiki", TrueTypeLoader.EMBEDDED_FONT, 15, Color.Orange, options));
+            // _.X = 30;
+            // _.Y = 420;
+            // _.AcceptMouseInput = true;
+            // Add(_hit = new HitBox(_.X, _.Y, _.MeasuredSize.X, _.MeasuredSize.Y));
+            // _hit.MouseUp += (s, e) =>
+            // {
+            //     Utility.Platforms.PlatformHelper.LaunchBrowser("https://github.com/PlayTazUO/TazUO/wiki");
+            // };
 
-            Add(_ = TextBox.GetOne("TazUO Discord", TrueTypeLoader.EMBEDDED_FONT, 15, Color.Orange, options));
-            _.X = 30;
-            _.Y = 440;
-            _.AcceptMouseInput = true;
-            Add(_hit = new HitBox(_.X, _.Y, _.MeasuredSize.X, _.MeasuredSize.Y));
-            _hit.MouseUp += (s, e) =>
-            {
-                Utility.Platforms.PlatformHelper.LaunchBrowser("https://discord.gg/QvqzkB95G4");
-            };
+            // Add(_ = TextBox.GetOne("TazUO Discord", TrueTypeLoader.EMBEDDED_FONT, 15, Color.Orange, options));
+            // _.X = 30;
+            // _.Y = 440;
+            // _.AcceptMouseInput = true;
+            // Add(_hit = new HitBox(_.X, _.Y, _.MeasuredSize.X, _.MeasuredSize.Y));
+            // _hit.MouseUp += (s, e) =>
+            // {
+            //     Utility.Platforms.PlatformHelper.LaunchBrowser("https://discord.gg/QvqzkB95G4");
+            // };
 
             var loginmusic_checkbox = new Checkbox
             (
