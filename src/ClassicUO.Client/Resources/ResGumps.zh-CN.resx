@@ -843,9 +843,9 @@
   <data name="Passive" xml:space="preserve"><value>被动</value></data>
   <data name="Item0Price1" xml:space="preserve"><value>{0}价格{1}金币</value></data>
   <data name="Name" xml:space="preserve"><value>名称：</value></data>
-  <data name="Real" xml:space="preserve"><value>实际</value></data>
-  <data name="Base" xml:space="preserve"><value>总计</value></data>
-  <data name="Cap" xml:space="preserve"><value>上限</value></data>
+  <data name="Real" xml:space="preserve"><value>Real</value></data>
+  <data name="Base" xml:space="preserve"><value>Base</value></data>
+  <data name="Cap" xml:space="preserve"><value>Cap</value></data>
   <data name="Total" xml:space="preserve"><value>总计：</value></data>
   <data name="TithingPointsAvailable" xml:space="preserve"><value>可用什一税点数：</value></data>
   <data name="Abilities" xml:space="preserve"><value>技能</value></data>
@@ -853,9 +853,9 @@
   <data name="Reagents" xml:space="preserve"><value>试剂：</value></data>
   <data name="Upkeep0Mana1MinSkill2" xml:space="preserve"><value>维持消耗：{0} 法力消耗：{0} 最低技能：{0}</value></data>
   <data name="ManaCost0MinSkill1" xml:space="preserve"><value>法力消耗：{0} 最低技能：{1}</value></data>
-  <data name="ShowReal" xml:space="preserve"><value>- 显示实际</value></data>
-  <data name="ShowCaps" xml:space="preserve"><value>- 显示上限</value></data>
-  <data name="NewGroup" xml:space="preserve"><value>新组</value></data>
+  <data name="ShowReal" xml:space="preserve"><value>- Show Real</value></data>
+  <data name="ShowCaps" xml:space="preserve"><value>- Show Caps</value></data>
+  <data name="NewGroup" xml:space="preserve"><value>New Group</value></data>
   <data name="Female" xml:space="preserve"><value>女</value></data>
   <data name="Male" xml:space="preserve"><value>男</value></data>
   <data name="Buffs" xml:space="preserve"><value>增益</value></data>
@@ -988,7 +988,7 @@
   <data name="BackpackStyle_Suede" xml:space="preserve"><value>麂皮</value></data>
   <data name="BackpackStyle_PolarBear" xml:space="preserve"><value>北极熊</value></data>
   <data name="BackpackStyle_GhoulSkin" xml:space="preserve"><value>食尸鬼皮</value></data>
-  <data name="ResetGroups" xml:space="preserve"><value>重置组</value></data>
+  <data name="ResetGroups" xml:space="preserve"><value>Reset Groups</value></data>
   <data name="TerrainShadowsLevel" xml:space="preserve"><value>地形阴影等级：</value></data>
   <data name="IgnoreGuildMessages" xml:space="preserve"><value>隐藏公会聊天</value></data>
   <data name="IgnoreAllianceMessages" xml:space="preserve"><value>隐藏联盟聊天</value></data>
