@@ -16,7 +16,7 @@ namespace ClassicUO.Game.UI.ImGuiControls
         private float _imguiWindowAlpha, _lastImguiWindowAlpha;
         private int _currentThemeIndex;
         private string[] _themeNames;
-        private GeneralWindow() : base("General Tab")
+        private GeneralWindow() : base(ImGuiTranslations.Get("General"))
         {
             WindowFlags = ImGuiWindowFlags.AlwaysAutoResize;
             _objectMoveDelay = _profile.MoveMultiObjectDelay;
@@ -37,7 +37,7 @@ namespace ClassicUO.Game.UI.ImGuiControls
         {
             if (_profile == null)
             {
-                ImGui.Text("Profile not loaded");
+                ImGui.Text(ImGuiTranslations.Get("Profile not loaded"));
                 return;
             }
 
@@ -45,43 +45,43 @@ namespace ClassicUO.Game.UI.ImGuiControls
 
             if (ImGui.BeginTabBar("##GeneralTabs", ImGuiTabBarFlags.None))
             {
-                if (ImGui.BeginTabItem("Options"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Options")))
                 {
                     DrawOptionsTab();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Info"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Info")))
                 {
                     DrawInfoTab();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("HUD"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("HUD")))
                 {
                     HudWindow.GetInstance()?.DrawContent();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Spell Bar"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Spell Bar")))
                 {
                     SpellBarWindow.GetInstance()?.DrawContent();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Title Bar"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Title Bar")))
                 {
                     TitleBarWindow.GetInstance()?.DrawContent();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Spell Indicators"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Spell Indicators")))
                 {
                     SpellIndicatorWindow.GetInstance()?.DrawContent();
                     ImGui.EndTabItem();
                 }
 
-                if (ImGui.BeginTabItem("Friends List"))
+                if (ImGui.BeginTabItem(ImGuiTranslations.Get("Friends List")))
                 {
                     FriendsListWindow.GetInstance()?.DrawContent();
                     ImGui.EndTabItem();
@@ -97,10 +97,10 @@ namespace ClassicUO.Game.UI.ImGuiControls
             // Group: Visual Config
             ImGui.BeginGroup();
             ImGui.AlignTextToFramePadding();
-            ImGui.TextColored(ImGuiTheme.Current.BaseContent, "Visual Config");
+            ImGui.TextColored(ImGuiTheme.Current.BaseContent, ImGuiTranslations.Get("Visual Config"));
 
             ImGui.SetNextItemWidth(125);
-            if (ImGui.SliderFloat("Assistant Alpha", ref _imguiWindowAlpha, 0.2f, 1.0f, "%.2f"))
+            if (ImGui.SliderFloat(ImGuiTranslations.Get("Assistant Alpha"), ref _imguiWindowAlpha, 0.2f, 1.0f, "%.2f"))
             {
                 if(Math.Abs(_imguiWindowAlpha - _lastImguiWindowAlpha) > 0.05)
                 {
@@ -110,10 +110,10 @@ namespace ClassicUO.Game.UI.ImGuiControls
                     _lastImguiWindowAlpha = _imguiWindowAlpha;
                 }
             }
-            ImGuiComponents.Tooltip("Adjust the background transparency of all ImGui windows.");
+            ImGuiComponents.Tooltip(ImGuiTranslations.Get("Adjust the background transparency of all ImGui windows."));
 
             ImGui.SetNextItemWidth(125);
-            if (ImGui.Combo("Theme", ref _currentThemeIndex, _themeNames, _themeNames.Length))
+            if (ImGui.Combo(ImGuiTranslations.Get("Theme"), ref _currentThemeIndex, _themeNames, _themeNames.Length))
             {
                 string selectedTheme = _themeNames[_currentThemeIndex];
                 if (ImGuiTheme.SetTheme(selectedTheme))
@@ -122,10 +122,10 @@ namespace ClassicUO.Game.UI.ImGuiControls
                     ImGuiManager.UpdateTheme(_imguiWindowAlpha);
                 }
             }
-            ImGuiComponents.Tooltip("Select the color theme for ImGui windows.");
+            ImGuiComponents.Tooltip(ImGuiTranslations.Get("Select the color theme for ImGui windows."));
 
             ImGui.SetNextItemWidth(125);
-            if (ImGui.SliderFloat("Assistant Alpha", ref _imguiWindowAlpha, 0.2f, 1.0f, "%.2f"))
+            if (ImGui.SliderFloat(ImGuiTranslations.Get("Assistant Alpha"), ref _imguiWindowAlpha, 0.2f, 1.0f, "%.2f"))
             {
                 if(Math.Abs(_imguiWindowAlpha - _lastImguiWindowAlpha) > 0.05)
                 {
@@ -135,24 +135,24 @@ namespace ClassicUO.Game.UI.ImGuiControls
                     _lastImguiWindowAlpha = _imguiWindowAlpha;
                 }
             }
-            ImGuiComponents.Tooltip("Adjust the background transparency of all ImGui windows.");
+            ImGuiComponents.Tooltip(ImGuiTranslations.Get("Adjust the background transparency of all ImGui windows."));
 
-            if (ImGui.Checkbox("Highlight game objects", ref _highlightObjects))
+            if (ImGui.Checkbox(ImGuiTranslations.Get("Highlight game objects"), ref _highlightObjects))
             {
                 _profile.HighlightGameObjects = _highlightObjects;
             }
 
-            if (ImGui.Checkbox("Show Names", ref _showNames))
+            if (ImGui.Checkbox(ImGuiTranslations.Get("Show Names"), ref _showNames))
             {
                 _profile.NameOverheadToggled = _showNames;
             }
-            ImGuiComponents.Tooltip("Toggle the display of names above characters and NPCs in the game world.");
+            ImGuiComponents.Tooltip(ImGuiTranslations.Get("Toggle the display of names above characters and NPCs in the game world."));
 
-            if (ImGui.Checkbox("Auto open own corpse", ref _autoOpenOwnCorpse))
+            if (ImGui.Checkbox(ImGuiTranslations.Get("Auto open own corpse"), ref _autoOpenOwnCorpse))
             {
                 _profile.AutoOpenOwnCorpse = _autoOpenOwnCorpse;
             }
-            ImGuiComponents.Tooltip("Automatically open your own corpse when you die, even if auto open corpses is disabled.");
+            ImGuiComponents.Tooltip(ImGuiTranslations.Get("Automatically open your own corpse when you die, even if auto open corpses is disabled."));
 
             ImGui.EndGroup();
 
@@ -161,12 +161,12 @@ namespace ClassicUO.Game.UI.ImGuiControls
             // Group: Delay Config
             ImGui.BeginGroup();
             ImGui.AlignTextToFramePadding();
-            ImGui.TextColored(ImGuiTheme.Current.BaseContent, "Delay Config");
+            ImGui.TextColored(ImGuiTheme.Current.BaseContent, ImGuiTranslations.Get("Delay Config"));
 
             int tempTurnDelay = _turnDelay;
 
             ImGui.SetNextItemWidth(150);
-            if (ImGui.SliderInt("Turn Delay", ref tempTurnDelay, 0, 150, " %d ms"))
+            if (ImGui.SliderInt(ImGuiTranslations.Get("Turn Delay"), ref tempTurnDelay, 0, 150, " %d ms"))
             {
                 if (tempTurnDelay < 0) tempTurnDelay = 0;
                 if (tempTurnDelay > ushort.MaxValue) tempTurnDelay = 100;
@@ -175,7 +175,7 @@ namespace ClassicUO.Game.UI.ImGuiControls
                 _profile.TurnDelay = _turnDelay;
             }
             ImGui.SetNextItemWidth(150);
-            if (ImGui.InputInt("Object Delay", ref _objectMoveDelay, 50, 100))
+            if (ImGui.InputInt(ImGuiTranslations.Get("Object Delay"), ref _objectMoveDelay, 50, 100))
             {
                 _objectMoveDelay = Math.Clamp(_objectMoveDelay, 0, 3000);
 
@@ -184,9 +184,9 @@ namespace ClassicUO.Game.UI.ImGuiControls
             ImGui.EndGroup();
         }
 
-        private readonly string _version = "TazUO Version: " + CUOEnviroment.Version; //Pre-cache to prevent reading var and string concatenation every frame
+        private readonly string _version = ImGuiTranslations.Get("TazUO Version: ") + CUOEnviroment.Version; //Pre-cache to prevent reading var and string concatenation every frame
         private uint _lastObject = 0;
-        private string _lastObjectString = "Last Object: 0x00000000";
+        private string _lastObjectString = ImGuiTranslations.Get("Last Object: ") + "0x00000000";
         private void DrawInfoTab()
         {
             if (World.Instance != null)
@@ -194,19 +194,19 @@ namespace ClassicUO.Game.UI.ImGuiControls
                 if (_lastObject != World.Instance.LastObject)
                 {
                     _lastObject = World.Instance.LastObject;
-                    _lastObjectString = $"Last Object: 0x{_lastObject:X8}";
+                    _lastObjectString = ImGuiTranslations.Get("Last Object: ") + $"0x{_lastObject:X8}";
                 }
             }
 
-            ImGui.Text("Ping: " + AsyncNetClient.Socket.Statistics.Ping + "ms");
+            ImGui.Text(ImGuiTranslations.Get("Ping: ") + AsyncNetClient.Socket.Statistics.Ping + "ms");
             ImGui.Spacing();
-            ImGui.Text("FPS: " + CUOEnviroment.CurrentRefreshRate);
+            ImGui.Text(ImGuiTranslations.Get("FPS: ") + CUOEnviroment.CurrentRefreshRate);
             ImGui.Spacing();
             ImGui.Text(_lastObjectString);
             if(ImGui.IsItemClicked())
             {
                 SDL3.SDL.SDL_SetClipboardText($"0x{_lastObject:X8}");
-                GameActions.Print("Copied last object to clipboard.", 62);
+                GameActions.Print(ImGuiTranslations.Get("Copied last object to clipboard."), 62);
             }
             ImGui.Spacing();
             ImGui.Text(_version);

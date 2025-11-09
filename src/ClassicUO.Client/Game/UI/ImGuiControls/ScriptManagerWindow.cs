@@ -141,7 +141,7 @@ while True:
         private readonly RenameState _renameState = new RenameState();
         private readonly DialogState _dialogState = new DialogState();
 
-        private ScriptManagerWindow() : base("Script Manager")
+        private ScriptManagerWindow() : base(ImGuiTranslations.Get("Script Manager"))
         {
             WindowFlags = ImGuiWindowFlags.None;
             _pendingReload = true;
@@ -175,7 +175,7 @@ while True:
 
             // Top menu bar - fixed at the top, not affected by scrolling
             DrawMenuBar();
-            ImGui.SeparatorText("Scripts");
+            ImGui.SeparatorText(ImGuiTranslations.Get("Scripts"));
             ImGui.Spacing();
             // Create a scrollable child region for the script groups
             Vector2 contentRegionAvail = ImGui.GetContentRegionAvail();
@@ -203,13 +203,13 @@ while True:
 
         private void DrawMenuBar()
         {
-            if (ImGui.Button("Menu"))
+            if (ImGui.Button(ImGuiTranslations.Get("Menu")))
             {
                 ImGui.OpenPopup("ScriptManagerMenu");
 
             }
             ImGui.SameLine();
-            if (ImGui.Button("Add +"))
+            if (ImGui.Button(ImGuiTranslations.Get("Add +")))
             {
                 _showContextMenu = true;
                 _contextMenuGroup = ""; // Root level
@@ -220,38 +220,38 @@ while True:
 
             if (ImGui.BeginPopup("ScriptManagerMenu"))
             {
-                if (ImGui.MenuItem("Refresh"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Refresh")))
                 {
                     _pendingReload = true;
                 }
 
-                if (ImGui.MenuItem("Public Script Browser"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Public Script Browser")))
                 {
                     ScriptBrowser.Show();
                 }
 
-                if (ImGui.MenuItem("Script Recording"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Script Recording")))
                 {
                     UIManager.Add(new ScriptRecordingGump());
                 }
 
-                if (ImGui.MenuItem("Scripting Info"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Scripting Info")))
                 {
                     ScriptingInfoGump.Show();
                 }
 
-                if (ImGui.MenuItem("Persistent Variables"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Persistent Variables")))
                 {
                     PersistentVarsWindow.Show();
                 }
 
-                if (ImGui.MenuItem("Running Scripts"))
+                if (ImGui.MenuItem(ImGuiTranslations.Get("Running Scripts")))
                 {
                     RunningScriptsWindow.Show();
                 }
 
                 bool disableCache = LegionScripting.LegionScripting.LScriptSettings.DisableModuleCache;
-                if (ImGui.Checkbox("Disable Module Cache", ref disableCache))
+                if (ImGui.Checkbox(ImGuiTranslations.Get("Disable Module Cache"), ref disableCache))
                 {
                     LegionScripting.LegionScripting.LScriptSettings.DisableModuleCache = disableCache;
                 }
@@ -438,7 +438,7 @@ while True:
             bool isPlaying = script.IsPlaying || (script.GetScript != null && script.GetScript.IsPlaying);
 
             // Draw play/stop button
-            string buttonText = isPlaying ? "Stop" : "Play";
+            string buttonText = isPlaying ? ImGuiTranslations.Get("Stop") : ImGuiTranslations.Get("Play");
             Vector4 buttonColor = isPlaying
                 ? new Vector4(0.2f, 0.6f, 0.2f, 1.0f) // Green for play
                 : ImGuiTheme.Current.Primary;
@@ -476,7 +476,7 @@ while True:
 
                 if (ImGui.IsItemHovered())
                 {
-                    string tooltip = hasGlobalAutostart ? "Autostart: All characters" : "Autostart: This character";
+                    string tooltip = hasGlobalAutostart ? ImGuiTranslations.Get("Autostart: All characters") : ImGuiTranslations.Get("Autostart: This character");
                     ImGui.SetTooltip(tooltip);
                 }
                 ImGui.SameLine();
@@ -544,7 +544,7 @@ while True:
                     }
 
                     // Tooltip showing what's being dragged
-                    ImGui.Text($"Moving: {displayName}");
+                    ImGui.Text(ImGuiTranslations.Get("Moving: ") + displayName);
                     ImGui.EndDragDropSource();
                 }
             }

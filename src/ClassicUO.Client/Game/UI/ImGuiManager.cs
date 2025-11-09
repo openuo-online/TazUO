@@ -78,14 +78,31 @@ namespace ClassicUO.Game.UI
             
             unsafe
             {
-                fixed (byte* fontPtr = TrueTypeLoader.Instance.ImGuiFont)
+                // TrueTypeLoader.Instance.ImGuiFont 已经自动加载了中文字体
+                byte[] fontData = TrueTypeLoader.Instance.ImGuiFont;
+                
+                if (fontData == null)
                 {
-                    ImGui.GetIO().Fonts.AddFontFromMemoryTTF(
+                    Utility.Logging.Log.Error("ImGuiFont is null! TrueTypeLoader may not have been loaded.");
+                    return;
+                }
+                
+                Utility.Logging.Log.Trace($"Loading ImGui font: {fontData.Length} bytes, size: {scaledFontSize:F1}");
+                
+                fixed (byte* fontPtr = fontData)
+                {
+                    // 使用 GetGlyphRangesChineseFull 获取完整中文字符集
+                    IntPtr ranges = io.Fonts.GetGlyphRangesChineseFull();
+                    io.Fonts.AddFontFromMemoryTTF(
                         (IntPtr)fontPtr,
-                        TrueTypeLoader.Instance.ImGuiFont.Length,
-                        scaledFontSize // 使用缩放后的字体大小
+                        fontData.Length,
+                        scaledFontSize,
+                        null,
+                        ranges
                     );
                 }
+                
+                Utility.Logging.Log.Trace($"ImGui font loaded successfully");
             }
 
             ImGuiStylePtr style = ImGui.GetStyle();

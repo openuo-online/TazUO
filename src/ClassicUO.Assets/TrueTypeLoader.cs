@@ -192,6 +192,16 @@ namespace ClassicUO.Assets
                     }
             }
 
+            // 尝试从运行时目录加载中文字体用于 ImGui
+            byte[] runtimeChineseFont = FindChineseFallbackFont();
+            if (runtimeChineseFont != null)
+            {
+                ImGuiFont = runtimeChineseFont;
+#if DEBUG
+                Log.Trace($"Using runtime Chinese font for ImGui ({runtimeChineseFont.Length} bytes)");
+#endif
+            }
+
             // 现在创建FontSystem，为每个字体添加中文回退
             foreach (var kvp in fontBytes)
             {
@@ -202,8 +212,11 @@ namespace ClassicUO.Assets
                 Log.Trace($"Loading embedded font: {fname}");
 #endif
 
-                if (fname == EMBEDDED_FONT) //Special case for ImGui
+                // 如果还没有设置 ImGuiFont（没有找到运行时中文字体），使用嵌入的默认字体
+                if (fname == EMBEDDED_FONT && ImGuiFont == null)
+                {
                     ImGuiFont = filebytes;
+                }
 
                 var fontSystem = new FontSystem(settings);
                 fontSystem.AddFont(filebytes);

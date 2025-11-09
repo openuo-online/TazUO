@@ -8,15 +8,15 @@ namespace ClassicUO.Game.UI.ImGuiControls
     public class AssistantWindow : SingletonImGuiWindow<AssistantWindow>
     {
         private readonly List<TabItem> _tabs = new();
-        private AssistantWindow() : base("Legion Assistant")
+        private AssistantWindow() : base(ImGuiTranslations.Get("Legion Assistant"))
         {
             WindowFlags = ImGuiWindowFlags.AlwaysAutoResize;
 
-            AddTab("General", DrawGeneral, GeneralWindow.Show, () => GeneralWindow.Instance?.Dispose());
-            AddTab("Agents", DrawAgents, AgentsWindow.Show, () => AgentsWindow.Instance?.Dispose());
-            AddTab("Organizer", DrawOrganizer, OrganizerWindow.Show, () => OrganizerWindow.Instance?.Dispose());
-            AddTab("Filters", DrawFilters, FiltersWindow.Show, () => FiltersWindow.Instance?.Dispose());
-            AddTab("Item Database", DrawItemDatabase, ItemDatabaseSearchWindow.Show, () => ItemDatabaseSearchWindow.Instance?.Dispose());
+            AddTab(ImGuiTranslations.Get("General"), DrawGeneral, GeneralWindow.Show, () => GeneralWindow.Instance?.Dispose());
+            AddTab(ImGuiTranslations.Get("Agents"), DrawAgents, AgentsWindow.Show, () => AgentsWindow.Instance?.Dispose());
+            AddTab(ImGuiTranslations.Get("Organizer"), DrawOrganizer, OrganizerWindow.Show, () => OrganizerWindow.Instance?.Dispose());
+            AddTab(ImGuiTranslations.Get("Filters"), DrawFilters, FiltersWindow.Show, () => FiltersWindow.Instance?.Dispose());
+            AddTab(ImGuiTranslations.Get("Item Database"), DrawItemDatabase, ItemDatabaseSearchWindow.Show, () => ItemDatabaseSearchWindow.Instance?.Dispose());
         }
 
         public void AddTab(string title, Action drawContent, Action showFullWindow, Action dispose) => _tabs.Add(new TabItem { Title = title, DrawContent = drawContent, ShowFullWindow = showFullWindow, Dispose = dispose });
@@ -35,7 +35,7 @@ namespace ClassicUO.Game.UI.ImGuiControls
         {
             if (_tabs.Count == 0)
             {
-                ImGui.Text("No tabs available");
+                ImGui.Text(ImGuiTranslations.Get("No tabs available"));
                 return;
             }
 
