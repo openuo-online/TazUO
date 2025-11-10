@@ -828,7 +828,7 @@
   <data name="Tell" xml:space="preserve"><value>告诉</value></data>
   <data name="Kick" xml:space="preserve"><value>踢出</value></data>
   <data name="Msg" xml:space="preserve"><value>消息</value></data>
-  <data name="PartyManifest" xml:space="preserve"><value>组队员名</value></data>
+  <data name="PartyManifest" xml:space="preserve"><value>Team Members</value></data>
   <data name="SendThePartyAMessage" xml:space="preserve"><value>向队伍发送消息</value></data>
   <data name="PartyCanLootMe" xml:space="preserve"><value>队伍可以拾取我的物品</value></data>
   <data name="PartyCannotLootMe" xml:space="preserve"><value>队伍不能拾取我的物品</value></data>
@@ -1081,5 +1081,67 @@
   <data name="UseLastObject" xml:space="preserve"><value>使用最后物体</value></data>
   <data name="MoveUp" xml:space="preserve"><value>上移</value></data>
   <data name="MoveDown" xml:space="preserve"><value>下移</value></data>
+  <data name="ScriptingInfo" xml:space="preserve"><value>脚本信息</value></data>
+  <data name="ScriptRecordingStopped" xml:space="preserve"><value>脚本录制 - 已停止</value></data>
+  <data name="ScriptRecordingRecording" xml:space="preserve"><value>脚本录制 - 录制中</value></data>
+  <data name="ScriptRecordingPaused" xml:space="preserve"><value>脚本录制 - 已暂停</value></data>
+  
+  <!-- 脚本录制窗口 -->
+  <data name="ScriptRecord" xml:space="preserve"><value>录制</value></data>
+  <data name="ScriptStop" xml:space="preserve"><value>停止</value></data>
+  <data name="ScriptPause" xml:space="preserve"><value>暂停</value></data>
+  <data name="ScriptResume" xml:space="preserve"><value>继续</value></data>
+  <data name="ScriptClear" xml:space="preserve"><value>清除</value></data>
+  <data name="ScriptCopyScript" xml:space="preserve"><value>复制脚本</value></data>
+  <data name="ScriptSaveScript" xml:space="preserve"><value>保存脚本</value></data>
+  <data name="ScriptStatusReady" xml:space="preserve"><value>状态：准备就绪</value></data>
+  <data name="ScriptStatusRecording" xml:space="preserve"><value>状态：录制中</value></data>
+  <data name="ScriptStatusPaused" xml:space="preserve"><value>状态：已暂停</value></data>
+  <data name="ScriptStatusStopped" xml:space="preserve"><value>状态：已停止</value></data>
+  <data name="ScriptDuration" xml:space="preserve"><value>时长：{0}:{1:D2}</value></data>
+  <data name="ScriptActions" xml:space="preserve"><value>动作数：{0}</value></data>
+  <data name="ScriptIncludePauses" xml:space="preserve"><value>包含暂停（时间延迟）</value></data>
+  <data name="ScriptRecordedActions" xml:space="preserve"><value>已录制的动作：</value></data>
+  <data name="ScriptCopiedToClipboard" xml:space="preserve"><value>脚本已复制到剪贴板！</value></data>
+  <data name="ScriptSavedAs" xml:space="preserve"><value>脚本已保存为 {0}</value></data>
+  <data name="ScriptFailedToCopy" xml:space="preserve"><value>复制脚本失败：{0}</value></data>
+  <data name="ScriptFailedToSave" xml:space="preserve"><value>保存脚本失败：{0}</value></data>
+  
+  <!-- 脚本动作类型 -->
+  <data name="ScriptActionWalk" xml:space="preserve"><value>行走 {0}</value></data>
+  <data name="ScriptActionRun" xml:space="preserve"><value>奔跑 {0}</value></data>
+  <data name="ScriptActionCast" xml:space="preserve"><value>施放 "{0}"</value></data>
+  <data name="ScriptActionSay" xml:space="preserve"><value>说 "{0}"</value></data>
+  <data name="ScriptActionUseItem" xml:space="preserve"><value>使用物品 0x{0:X8}</value></data>
+  <data name="ScriptActionDragDrop" xml:space="preserve"><value>拖放 0x{0:X8} → 0x{1:X8}</value></data>
+  <data name="ScriptActionTarget" xml:space="preserve"><value>目标 0x{0:X8}</value></data>
+  <data name="ScriptActionTargetLocation" xml:space="preserve"><value>目标位置 ({0}, {1}, {2})</value></data>
+  <data name="ScriptActionOpenContainer" xml:space="preserve"><value>打开 {0} 0x{1:X8}</value></data>
+  <data name="ScriptActionCloseContainer" xml:space="preserve"><value>关闭 {0} 0x{1:X8}</value></data>
+  <data name="ScriptActionAttack" xml:space="preserve"><value>攻击 0x{0:X8}</value></data>
+  <data name="ScriptActionBandageSelf" xml:space="preserve"><value>给自己绑绷带</value></data>
+  <data name="ScriptActionContextMenu" xml:space="preserve"><value>右键菜单 0x{0:X8} [{1}]</value></data>
+  <data name="ScriptActionUseSkill" xml:space="preserve"><value>使用技能 "{0}"</value></data>
+  <data name="ScriptActionEquipItem" xml:space="preserve"><value>装备 0x{0:X8} ({1})</value></data>
+  <data name="ScriptActionReplyGump" xml:space="preserve"><value>Gump按钮 {0} (0x{1:X8})</value></data>
+  <data name="ScriptActionHeadMsg" xml:space="preserve"><value>头顶消息 "{0}" (0x{1:X8})</value></data>
+  <data name="ScriptActionPartyMsg" xml:space="preserve"><value>队伍："{0}"</value></data>
+  <data name="ScriptActionGuildMsg" xml:space="preserve"><value>公会："{0}"</value></data>
+  <data name="ScriptActionAllyMsg" xml:space="preserve"><value>联盟："{0}"</value></data>
+  <data name="ScriptActionWhisperMsg" xml:space="preserve"><value>低语："{0}"</value></data>
+  <data name="ScriptActionYellMsg" xml:space="preserve"><value>喊叫："{0}"</value></data>
+  <data name="ScriptActionEmoteMsg" xml:space="preserve"><value>表情："{0}"</value></data>
+  <data name="ScriptActionMount" xml:space="preserve"><value>骑乘 0x{0:X8}</value></data>
+  <data name="ScriptActionDismount" xml:space="preserve"><value>下马</value></data>
+  <data name="ScriptActionToggleAbility" xml:space="preserve"><value>切换能力 "{0}"</value></data>
+  <data name="ScriptActionVirtue" xml:space="preserve"><value>使用美德 "{0}"</value></data>
+  <data name="ScriptActionWaitForGump" xml:space="preserve"><value>等待gump</value></data>
+  <data name="ScriptActionUnknown" xml:space="preserve"><value>{0}(...)</value></data>
+  
+  <!-- 脚本信息窗口 -->
+  <data name="ScriptInfoCopiedToClipboard" xml:space="preserve"><value>已复制到剪贴板！</value></data>
+  
+  <!-- 通用 -->
+  <data name="ScriptContainer" xml:space="preserve"><value>容器</value></data>
 </root>
 

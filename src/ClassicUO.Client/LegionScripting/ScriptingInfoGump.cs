@@ -46,7 +46,7 @@ namespace ClassicUO.LegionScripting
         private void InitializeComponents()
         {
             // Title
-            titleTextBox = TextBox.GetOne("Scripting Info", TrueTypeLoader.EMBEDDED_FONT, 18, Color.DarkOrange, TextBox.RTLOptions.Default(Width - 2 * BorderSize));
+            titleTextBox = TextBox.GetOne(Resources.ResGumps.ScriptingInfo, TrueTypeLoader.EMBEDDED_FONT, 18, Color.DarkOrange, TextBox.RTLOptions.Default(Width - 2 * BorderSize));
             titleTextBox.X = BorderSize;
             titleTextBox.Y = BorderSize;
             titleTextBox.AcceptMouseInput = false;
@@ -182,7 +182,7 @@ namespace ClassicUO.LegionScripting
                     if (!string.IsNullOrEmpty(currentValue))
                     {
                         SetClipboardText(currentValue);
-                        GameActions.Print("Copied to clipboard!");
+                        GameActions.Print(Resources.ResGumps.ScriptInfoCopiedToClipboard);
                     }
                 }
                 catch (Exception)

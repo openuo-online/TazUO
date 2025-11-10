@@ -1627,4 +1627,174 @@ Client version: '{0}'</value>
   <data name="OverheadPartyMessages" xml:space="preserve">
     <value>Show party messages overhead</value>
   </data>
+  <data name="ScriptingInfo" xml:space="preserve">
+    <value>Scripting Info</value>
+  </data>
+  <data name="ScriptRecordingStopped" xml:space="preserve">
+    <value>Script Recording - Stopped</value>
+  </data>
+  <data name="ScriptRecordingRecording" xml:space="preserve">
+    <value>Script Recording - Recording</value>
+  </data>
+  <data name="ScriptRecordingPaused" xml:space="preserve">
+    <value>Script Recording - Paused</value>
+  </data>
+  
+  <!-- Script Recording Window -->
+  <data name="ScriptRecord" xml:space="preserve">
+    <value>Record</value>
+  </data>
+  <data name="ScriptStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="ScriptPause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="ScriptResume" xml:space="preserve">
+    <value>Resume</value>
+  </data>
+  <data name="ScriptClear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ScriptCopyScript" xml:space="preserve">
+    <value>Copy Script</value>
+  </data>
+  <data name="ScriptSaveScript" xml:space="preserve">
+    <value>Save Script</value>
+  </data>
+  <data name="ScriptStatusReady" xml:space="preserve">
+    <value>Status: Ready</value>
+  </data>
+  <data name="ScriptStatusRecording" xml:space="preserve">
+    <value>Status: Recording</value>
+  </data>
+  <data name="ScriptStatusPaused" xml:space="preserve">
+    <value>Status: Paused</value>
+  </data>
+  <data name="ScriptStatusStopped" xml:space="preserve">
+    <value>Status: Stopped</value>
+  </data>
+  <data name="ScriptDuration" xml:space="preserve">
+    <value>Duration: {0}:{1:D2}</value>
+  </data>
+  <data name="ScriptActions" xml:space="preserve">
+    <value>Actions: {0}</value>
+  </data>
+  <data name="ScriptIncludePauses" xml:space="preserve">
+    <value>Included pauses (timing delays)</value>
+  </data>
+  <data name="ScriptRecordedActions" xml:space="preserve">
+    <value>Recorded Actions:</value>
+  </data>
+  <data name="ScriptCopiedToClipboard" xml:space="preserve">
+    <value>Script copied to clipboard!</value>
+  </data>
+  <data name="ScriptSavedAs" xml:space="preserve">
+    <value>Script saved as {0}</value>
+  </data>
+  <data name="ScriptFailedToCopy" xml:space="preserve">
+    <value>Failed to copy script: {0}</value>
+  </data>
+  <data name="ScriptFailedToSave" xml:space="preserve">
+    <value>Failed to save script: {0}</value>
+  </data>
+  
+  <!-- Script Action Types -->
+  <data name="ScriptActionWalk" xml:space="preserve">
+    <value>Walk {0}</value>
+  </data>
+  <data name="ScriptActionRun" xml:space="preserve">
+    <value>Run {0}</value>
+  </data>
+  <data name="ScriptActionCast" xml:space="preserve">
+    <value>Cast "{0}"</value>
+  </data>
+  <data name="ScriptActionSay" xml:space="preserve">
+    <value>Say "{0}"</value>
+  </data>
+  <data name="ScriptActionUseItem" xml:space="preserve">
+    <value>Use Item 0x{0:X8}</value>
+  </data>
+  <data name="ScriptActionDragDrop" xml:space="preserve">
+    <value>DragDrop 0x{0:X8} → 0x{1:X8}</value>
+  </data>
+  <data name="ScriptActionTarget" xml:space="preserve">
+    <value>Target 0x{0:X8}</value>
+  </data>
+  <data name="ScriptActionTargetLocation" xml:space="preserve">
+    <value>Target Loc ({0}, {1}, {2})</value>
+  </data>
+  <data name="ScriptActionOpenContainer" xml:space="preserve">
+    <value>Open {0} 0x{1:X8}</value>
+  </data>
+  <data name="ScriptActionCloseContainer" xml:space="preserve">
+    <value>Close {0} 0x{1:X8}</value>
+  </data>
+  <data name="ScriptActionAttack" xml:space="preserve">
+    <value>Attack 0x{0:X8}</value>
+  </data>
+  <data name="ScriptActionBandageSelf" xml:space="preserve">
+    <value>Bandage Self</value>
+  </data>
+  <data name="ScriptActionContextMenu" xml:space="preserve">
+    <value>Context Menu 0x{0:X8} [{1}]</value>
+  </data>
+  <data name="ScriptActionUseSkill" xml:space="preserve">
+    <value>Use Skill "{0}"</value>
+  </data>
+  <data name="ScriptActionEquipItem" xml:space="preserve">
+    <value>Equip 0x{0:X8} ({1})</value>
+  </data>
+  <data name="ScriptActionReplyGump" xml:space="preserve">
+    <value>Gump Button {0} (0x{1:X8})</value>
+  </data>
+  <data name="ScriptActionHeadMsg" xml:space="preserve">
+    <value>Head Msg "{0}" (0x{1:X8})</value>
+  </data>
+  <data name="ScriptActionPartyMsg" xml:space="preserve">
+    <value>Party: "{0}"</value>
+  </data>
+  <data name="ScriptActionGuildMsg" xml:space="preserve">
+    <value>Guild: "{0}"</value>
+  </data>
+  <data name="ScriptActionAllyMsg" xml:space="preserve">
+    <value>Ally: "{0}"</value>
+  </data>
+  <data name="ScriptActionWhisperMsg" xml:space="preserve">
+    <value>Whisper: "{0}"</value>
+  </data>
+  <data name="ScriptActionYellMsg" xml:space="preserve">
+    <value>Yell: "{0}"</value>
+  </data>
+  <data name="ScriptActionEmoteMsg" xml:space="preserve">
+    <value>Emote: "{0}"</value>
+  </data>
+  <data name="ScriptActionMount" xml:space="preserve">
+    <value>Mount 0x{0:X8}</value>
+  </data>
+  <data name="ScriptActionDismount" xml:space="preserve">
+    <value>Dismount</value>
+  </data>
+  <data name="ScriptActionToggleAbility" xml:space="preserve">
+    <value>Toggle Ability "{0}"</value>
+  </data>
+  <data name="ScriptActionVirtue" xml:space="preserve">
+    <value>Invoke Virtue "{0}"</value>
+  </data>
+  <data name="ScriptActionWaitForGump" xml:space="preserve">
+    <value>Wait for gump</value>
+  </data>
+  <data name="ScriptActionUnknown" xml:space="preserve">
+    <value>{0}(...)</value>
+  </data>
+  
+  <!-- Script Info Window -->
+  <data name="ScriptInfoCopiedToClipboard" xml:space="preserve">
+    <value>Copied to clipboard!</value>
+  </data>
+  
+  <!-- Common -->
+  <data name="ScriptContainer" xml:space="preserve">
+    <value>container</value>
+  </data>
 </root>

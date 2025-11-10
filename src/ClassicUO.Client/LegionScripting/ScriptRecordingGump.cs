@@ -49,7 +49,7 @@ namespace ClassicUO.LegionScripting
         private void BuildGump()
         {
             // Title bar
-            _titleBar = new Label("Script Recording - Stopped", true, 52, font: 1)
+            _titleBar = new Label(Resources.ResGumps.ScriptRecordingStopped, true, 52, font: 1)
             {
                 X = BorderSize + 10,
                 Y = BorderSize + 10
@@ -59,7 +59,7 @@ namespace ClassicUO.LegionScripting
             int currentY = _titleBar.Y + _titleBar.Height + 15;
 
             // Control buttons
-            _recordButton = new NiceButton(BorderSize + 10, currentY, 80, 25, ButtonAction.Activate, "Record", 0, TEXT_ALIGN_TYPE.TS_CENTER)
+            _recordButton = new NiceButton(BorderSize + 10, currentY, 80, 25, ButtonAction.Activate, Resources.ResGumps.ScriptRecord, 0, TEXT_ALIGN_TYPE.TS_CENTER)
             {
                 ButtonParameter = (int)RecordingAction.ToggleRecord,
                 DisplayBorder = true
@@ -67,7 +67,7 @@ namespace ClassicUO.LegionScripting
             _recordButton.MouseUp += OnButtonClick;
             Add(_recordButton);
 
-            _pauseButton = new NiceButton(BorderSize + 100, currentY, 60, 25, ButtonAction.Activate, "Pause", 0, TEXT_ALIGN_TYPE.TS_CENTER)
+            _pauseButton = new NiceButton(BorderSize + 100, currentY, 60, 25, ButtonAction.Activate, Resources.ResGumps.ScriptPause, 0, TEXT_ALIGN_TYPE.TS_CENTER)
             {
                 ButtonParameter = (int)RecordingAction.Pause,
                 IsEnabled = false,
@@ -76,7 +76,7 @@ namespace ClassicUO.LegionScripting
             _pauseButton.MouseUp += OnButtonClick;
             Add(_pauseButton);
 
-            _clearButton = new NiceButton(BorderSize + 170, currentY, 60, 25, ButtonAction.Activate, "Clear", 0, TEXT_ALIGN_TYPE.TS_CENTER)
+            _clearButton = new NiceButton(BorderSize + 170, currentY, 60, 25, ButtonAction.Activate, Resources.ResGumps.ScriptClear, 0, TEXT_ALIGN_TYPE.TS_CENTER)
             {
                 ButtonParameter = (int)RecordingAction.Clear,
                 DisplayBorder = true
@@ -87,7 +87,7 @@ namespace ClassicUO.LegionScripting
             currentY += 35;
 
             // Status information
-            _statusText = new Label("Status: Ready", true, 0xFFFF, font: 1)
+            _statusText = new Label(Resources.ResGumps.ScriptStatusReady, true, 0xFFFF, font: 1)
             {
                 X = BorderSize + 10,
                 Y = currentY
@@ -96,7 +96,7 @@ namespace ClassicUO.LegionScripting
 
             currentY += _statusText.Height + 5;
 
-            _durationText = new Label("Duration: 0:00", true, 999, font: 1)
+            _durationText = new Label(string.Format(Resources.ResGumps.ScriptDuration, 0, 0), true, 999, font: 1)
             {
                 X = BorderSize + 10,
                 Y = currentY
@@ -105,7 +105,7 @@ namespace ClassicUO.LegionScripting
 
             currentY += _durationText.Height + 5;
 
-            _actionCountText = new Label("Actions: 0", true, 999, font: 1)
+            _actionCountText = new Label(string.Format(Resources.ResGumps.ScriptActions, 0), true, 999, font: 1)
             {
                 X = BorderSize + 10,
                 Y = currentY
@@ -115,7 +115,7 @@ namespace ClassicUO.LegionScripting
             currentY += _actionCountText.Height + 10;
 
             // Record pauses option
-            _recordPausesCheckbox = new Checkbox(0x00D2, 0x00D3, "Included pauses (timing delays)", 1, 0xFFFF)
+            _recordPausesCheckbox = new Checkbox(0x00D2, 0x00D3, Resources.ResGumps.ScriptIncludePauses, 1, 0xFFFF)
             {
                 X = BorderSize + 10,
                 Y = currentY,
@@ -126,7 +126,7 @@ namespace ClassicUO.LegionScripting
             currentY += _recordPausesCheckbox.Height + 15;
 
             // Action list
-            var actionListLabel = new Label("Recorded Actions:", true, 0x35, font: 1)
+            var actionListLabel = new Label(Resources.ResGumps.ScriptRecordedActions, true, 0x35, font: 1)
             {
                 X = BorderSize + 10,
                 Y = currentY
@@ -153,7 +153,7 @@ namespace ClassicUO.LegionScripting
 
             // Bottom buttons
             int bottomY = Height - BorderSize - 35;
-            _copyButton = new NiceButton(BorderSize + 10, bottomY, 100, 25, ButtonAction.Activate, "Copy Script", 0, TEXT_ALIGN_TYPE.TS_CENTER)
+            _copyButton = new NiceButton(BorderSize + 10, bottomY, 100, 25, ButtonAction.Activate, Resources.ResGumps.ScriptCopyScript, 0, TEXT_ALIGN_TYPE.TS_CENTER)
             {
                 ButtonParameter = (int)RecordingAction.Copy,
                 DisplayBorder = true
@@ -161,7 +161,7 @@ namespace ClassicUO.LegionScripting
             _copyButton.MouseUp += OnButtonClick;
             Add(_copyButton);
 
-            _saveButton = new NiceButton(BorderSize + 120, bottomY, 100, 25, ButtonAction.Activate, "Save Script", 0, TEXT_ALIGN_TYPE.TS_CENTER)
+            _saveButton = new NiceButton(BorderSize + 120, bottomY, 100, 25, ButtonAction.Activate, Resources.ResGumps.ScriptSaveScript, 0, TEXT_ALIGN_TYPE.TS_CENTER)
             {
                 ButtonParameter = (int)RecordingAction.Save,
                 DisplayBorder = true
@@ -298,19 +298,29 @@ namespace ClassicUO.LegionScripting
             ScriptRecorder recorder = ScriptRecorder.Instance;
 
             // Update title
-            string status = recorder.IsRecording
-                ? (recorder.IsPaused ? "Paused" : "Recording")
-                : "Stopped";
-
-            _titleBar.Text = $"Script Recording - {status}";
+            if (recorder.IsRecording)
+            {
+                _titleBar.Text = recorder.IsPaused ? Resources.ResGumps.ScriptRecordingPaused : Resources.ResGumps.ScriptRecordingRecording;
+            }
+            else
+            {
+                _titleBar.Text = Resources.ResGumps.ScriptRecordingStopped;
+            }
 
             // Update buttons
-            _recordButton.SetText(recorder.IsRecording ? "Stop" : "Record");
+            _recordButton.SetText(recorder.IsRecording ? Resources.ResGumps.ScriptStop : Resources.ResGumps.ScriptRecord);
             _pauseButton.IsEnabled = recorder.IsRecording;
-            _pauseButton.SetText(recorder.IsPaused ? "Resume" : "Pause");
+            _pauseButton.SetText(recorder.IsPaused ? Resources.ResGumps.ScriptResume : Resources.ResGumps.ScriptPause);
 
             // Update status
-            _statusText.Text = $"Status: {status}";
+            if (recorder.IsRecording)
+            {
+                _statusText.Text = recorder.IsPaused ? Resources.ResGumps.ScriptStatusPaused : Resources.ResGumps.ScriptStatusRecording;
+            }
+            else
+            {
+                _statusText.Text = Resources.ResGumps.ScriptStatusReady;
+            }
 
             // Update duration and action count
             UpdateDuration();
@@ -324,10 +334,10 @@ namespace ClassicUO.LegionScripting
             uint minutes = seconds / 60;
             seconds %= 60;
 
-            _durationText.Text = $"Duration: {minutes}:{seconds:D2}";
+            _durationText.Text = string.Format(Resources.ResGumps.ScriptDuration, minutes, seconds);
         }
 
-        private void UpdateActionCount() => _actionCountText.Text = $"Actions: {ScriptRecorder.Instance.ActionCount}";
+        private void UpdateActionCount() => _actionCountText.Text = string.Format(Resources.ResGumps.ScriptActions, ScriptRecorder.Instance.ActionCount);
 
         private void UpdateActionList()
         {
@@ -395,105 +405,105 @@ namespace ClassicUO.LegionScripting
             {
                 case "walk":
                     string walkDir = action.Parameters.ContainsKey("direction") ? Utility.GetDirectionString(Utility.GetDirection(action.Parameters["direction"].ToString())) : "?";
-                    return $"Walk {walkDir}";
+                    return string.Format(Resources.ResGumps.ScriptActionWalk, walkDir);
                 case "run":
                     string runDir = action.Parameters.ContainsKey("direction") ? Utility.GetDirectionString(Utility.GetDirection(action.Parameters["direction"].ToString())) : "?";
-                    return $"Run {runDir}";
+                    return string.Format(Resources.ResGumps.ScriptActionRun, runDir);
                 case "cast":
                     object spell = action.Parameters.ContainsKey("spell") ? action.Parameters["spell"] : "?";
-                    return $"Cast \"{spell}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionCast, spell);
                 case "say":
                     string message = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (message.Length > 30)
                         message = message.Substring(0, 27) + "...";
-                    return $"Say \"{message}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionSay, message);
                 case "useitem":
                     object serial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    return $"Use Item 0x{serial:X8}";
+                    return string.Format(Resources.ResGumps.ScriptActionUseItem, serial);
                 case "dragdrop":
                     object from = action.Parameters.ContainsKey("from") ? action.Parameters["from"] : "?";
                     object to = action.Parameters.ContainsKey("to") ? action.Parameters["to"] : "?";
-                    return $"DragDrop 0x{from:X8} → 0x{to:X8}";
+                    return string.Format(Resources.ResGumps.ScriptActionDragDrop, from, to);
                 case "target":
                     object targetSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    return $"Target 0x{targetSerial:X8}";
+                    return string.Format(Resources.ResGumps.ScriptActionTarget, targetSerial);
                 case "targetlocation":
                     object targX = action.Parameters.ContainsKey("x") ? action.Parameters["x"] : "?";
                     object targY = action.Parameters.ContainsKey("y") ? action.Parameters["y"] : "?";
                     object targZ = action.Parameters.ContainsKey("z") ? action.Parameters["z"] : "?";
-                    return $"Target Loc ({targX}, {targY}, {targZ})";
+                    return string.Format(Resources.ResGumps.ScriptActionTargetLocation, targX, targY, targZ);
                 case "opencontainer":
                     object openSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    object openType = action.Parameters.ContainsKey("type") ? action.Parameters["type"] : "container";
-                    return $"Open {openType} 0x{openSerial:X8}";
+                    object openType = action.Parameters.ContainsKey("type") ? action.Parameters["type"] : Resources.ResGumps.ScriptContainer;
+                    return string.Format(Resources.ResGumps.ScriptActionOpenContainer, openType, openSerial);
                 case "closecontainer":
                     object closeSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    object closeType = action.Parameters.ContainsKey("type") ? action.Parameters["type"] : "container";
-                    return $"Close {closeType} 0x{closeSerial:X8}";
+                    object closeType = action.Parameters.ContainsKey("type") ? action.Parameters["type"] : Resources.ResGumps.ScriptContainer;
+                    return string.Format(Resources.ResGumps.ScriptActionCloseContainer, closeType, closeSerial);
                 case "attack":
                     object attackSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    return $"Attack 0x{attackSerial:X8}";
+                    return string.Format(Resources.ResGumps.ScriptActionAttack, attackSerial);
                 case "bandageself":
-                    return "Bandage Self";
+                    return Resources.ResGumps.ScriptActionBandageSelf;
                 case "contextmenu":
                     object contextSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
                     object contextIndex = action.Parameters.ContainsKey("index") ? action.Parameters["index"] : "?";
-                    return $"Context Menu 0x{contextSerial:X8} [{contextIndex}]";
+                    return string.Format(Resources.ResGumps.ScriptActionContextMenu, contextSerial, contextIndex);
                 case "useskill":
                     object skillName = action.Parameters.ContainsKey("skill") ? action.Parameters["skill"] : "?";
-                    return $"Use Skill \"{skillName}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionUseSkill, skillName);
                 case "equipitem":
                     object equipSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
                     object layer = action.Parameters.ContainsKey("layer") ? action.Parameters["layer"] : "?";
-                    return $"Equip 0x{equipSerial:X8} ({layer})";
+                    return string.Format(Resources.ResGumps.ScriptActionEquipItem, equipSerial, layer);
                 case "replygump":
                     object gumpButton = action.Parameters.ContainsKey("button") ? action.Parameters["button"] : "?";
                     object gumpId = action.Parameters.ContainsKey("gumpid") ? action.Parameters["gumpid"] : "?";
-                    return $"Gump Button {gumpButton} (0x{gumpId:X8})";
+                    return string.Format(Resources.ResGumps.ScriptActionReplyGump, gumpButton, gumpId);
                 case "headmsg":
                     string headMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     object headSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
                     if (headMsgText.Length > 20) headMsgText = headMsgText.Substring(0, 17) + "...";
-                    return $"Head Msg \"{headMsgText}\" (0x{headSerial:X8})";
+                    return string.Format(Resources.ResGumps.ScriptActionHeadMsg, headMsgText, headSerial);
                 case "partymsg":
                     string partyMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (partyMsgText.Length > 25) partyMsgText = partyMsgText.Substring(0, 22) + "...";
-                    return $"Party: \"{partyMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionPartyMsg, partyMsgText);
                 case "guildmsg":
                     string guildMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (guildMsgText.Length > 25) guildMsgText = guildMsgText.Substring(0, 22) + "...";
-                    return $"Guild: \"{guildMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionGuildMsg, guildMsgText);
                 case "allymsg":
                     string allyMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (allyMsgText.Length > 25) allyMsgText = allyMsgText.Substring(0, 22) + "...";
-                    return $"Ally: \"{allyMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionAllyMsg, allyMsgText);
                 case "whispermsg":
                     string whisperMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (whisperMsgText.Length > 25) whisperMsgText = whisperMsgText.Substring(0, 22) + "...";
-                    return $"Whisper: \"{whisperMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionWhisperMsg, whisperMsgText);
                 case "yellmsg":
                     string yellMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (yellMsgText.Length > 25) yellMsgText = yellMsgText.Substring(0, 22) + "...";
-                    return $"Yell: \"{yellMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionYellMsg, yellMsgText);
                 case "emotemsg":
                     string emoteMsgText = action.Parameters.ContainsKey("message") ? action.Parameters["message"].ToString() : "?";
                     if (emoteMsgText.Length > 25) emoteMsgText = emoteMsgText.Substring(0, 22) + "...";
-                    return $"Emote: \"{emoteMsgText}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionEmoteMsg, emoteMsgText);
                 case "mount":
                     object mountSerial = action.Parameters.ContainsKey("serial") ? action.Parameters["serial"] : "?";
-                    return $"Mount 0x{mountSerial:X8}";
+                    return string.Format(Resources.ResGumps.ScriptActionMount, mountSerial);
                 case "dismount":
-                    return "Dismount";
+                    return Resources.ResGumps.ScriptActionDismount;
                 case "toggleability":
                     object ability = action.Parameters.ContainsKey("ability") ? action.Parameters["ability"] : "?";
-                    return $"Toggle Ability \"{ability}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionToggleAbility, ability);
                 case "virtue":
                     object virtue = action.Parameters.ContainsKey("virtue") ? action.Parameters["virtue"] : "?";
-                    return $"Invoke Virtue \"{virtue}\"";
+                    return string.Format(Resources.ResGumps.ScriptActionVirtue, virtue);
                 case "waitforgump":
-                    return "Wait for gump";
+                    return Resources.ResGumps.ScriptActionWaitForGump;
                 default:
-                    return $"{action.ActionType}(...)";
+                    return string.Format(Resources.ResGumps.ScriptActionUnknown, action.ActionType);
             }
         }
 
@@ -503,11 +513,11 @@ namespace ClassicUO.LegionScripting
             {
                 string script = ScriptRecorder.Instance.GenerateScript(_recordPausesCheckbox.IsChecked);
                 SDL3.SDL.SDL_SetClipboardText(script);
-                GameActions.Print("Script copied to clipboard!");
+                GameActions.Print(Resources.ResGumps.ScriptCopiedToClipboard);
             }
             catch (Exception ex)
             {
-                GameActions.Print($"Failed to copy script: {ex.Message}");
+                GameActions.Print(string.Format(Resources.ResGumps.ScriptFailedToCopy, ex.Message));
             }
         }
 
@@ -520,11 +530,11 @@ namespace ClassicUO.LegionScripting
                 string filePath = System.IO.Path.Combine(LegionScripting.ScriptPath, fileName);
 
                 System.IO.File.WriteAllText(filePath, script);
-                GameActions.Print($"Script saved as {fileName}");
+                GameActions.Print(string.Format(Resources.ResGumps.ScriptSavedAs, fileName));
             }
             catch (Exception ex)
             {
-                GameActions.Print($"Failed to save script: {ex.Message}");
+                GameActions.Print(string.Format(Resources.ResGumps.ScriptFailedToSave, ex.Message));
             }
         }
 

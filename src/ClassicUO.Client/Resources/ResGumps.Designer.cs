@@ -4576,5 +4576,491 @@ namespace ClassicUO.Resources {
                 return ResourceManager.GetString("YourCurrentChannel", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scripting Info.
+        /// </summary>
+        public static string ScriptingInfo {
+            get {
+                return ResourceManager.GetString("ScriptingInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script Recording - Stopped.
+        /// </summary>
+        public static string ScriptRecordingStopped {
+            get {
+                return ResourceManager.GetString("ScriptRecordingStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script Recording - Recording.
+        /// </summary>
+        public static string ScriptRecordingRecording {
+            get {
+                return ResourceManager.GetString("ScriptRecordingRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script Recording - Paused.
+        /// </summary>
+        public static string ScriptRecordingPaused {
+            get {
+                return ResourceManager.GetString("ScriptRecordingPaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Record.
+        /// </summary>
+        public static string ScriptRecord {
+            get {
+                return ResourceManager.GetString("ScriptRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        public static string ScriptStop {
+            get {
+                return ResourceManager.GetString("ScriptStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        public static string ScriptPause {
+            get {
+                return ResourceManager.GetString("ScriptPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resume.
+        /// </summary>
+        public static string ScriptResume {
+            get {
+                return ResourceManager.GetString("ScriptResume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ScriptClear {
+            get {
+                return ResourceManager.GetString("ScriptClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Script.
+        /// </summary>
+        public static string ScriptCopyScript {
+            get {
+                return ResourceManager.GetString("ScriptCopyScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Script.
+        /// </summary>
+        public static string ScriptSaveScript {
+            get {
+                return ResourceManager.GetString("ScriptSaveScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Ready.
+        /// </summary>
+        public static string ScriptStatusReady {
+            get {
+                return ResourceManager.GetString("ScriptStatusReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Recording.
+        /// </summary>
+        public static string ScriptStatusRecording {
+            get {
+                return ResourceManager.GetString("ScriptStatusRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Paused.
+        /// </summary>
+        public static string ScriptStatusPaused {
+            get {
+                return ResourceManager.GetString("ScriptStatusPaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Stopped.
+        /// </summary>
+        public static string ScriptStatusStopped {
+            get {
+                return ResourceManager.GetString("ScriptStatusStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Duration: {0}:{1:D2}.
+        /// </summary>
+        public static string ScriptDuration {
+            get {
+                return ResourceManager.GetString("ScriptDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions: {0}.
+        /// </summary>
+        public static string ScriptActions {
+            get {
+                return ResourceManager.GetString("ScriptActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Included pauses (timing delays).
+        /// </summary>
+        public static string ScriptIncludePauses {
+            get {
+                return ResourceManager.GetString("ScriptIncludePauses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recorded Actions:.
+        /// </summary>
+        public static string ScriptRecordedActions {
+            get {
+                return ResourceManager.GetString("ScriptRecordedActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script copied to clipboard!.
+        /// </summary>
+        public static string ScriptCopiedToClipboard {
+            get {
+                return ResourceManager.GetString("ScriptCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script saved as {0}.
+        /// </summary>
+        public static string ScriptSavedAs {
+            get {
+                return ResourceManager.GetString("ScriptSavedAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to copy script: {0}.
+        /// </summary>
+        public static string ScriptFailedToCopy {
+            get {
+                return ResourceManager.GetString("ScriptFailedToCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to save script: {0}.
+        /// </summary>
+        public static string ScriptFailedToSave {
+            get {
+                return ResourceManager.GetString("ScriptFailedToSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Walk {0}.
+        /// </summary>
+        public static string ScriptActionWalk {
+            get {
+                return ResourceManager.GetString("ScriptActionWalk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run {0}.
+        /// </summary>
+        public static string ScriptActionRun {
+            get {
+                return ResourceManager.GetString("ScriptActionRun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cast "{0}".
+        /// </summary>
+        public static string ScriptActionCast {
+            get {
+                return ResourceManager.GetString("ScriptActionCast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Say "{0}".
+        /// </summary>
+        public static string ScriptActionSay {
+            get {
+                return ResourceManager.GetString("ScriptActionSay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Item 0x{0:X8}.
+        /// </summary>
+        public static string ScriptActionUseItem {
+            get {
+                return ResourceManager.GetString("ScriptActionUseItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DragDrop 0x{0:X8} → 0x{1:X8}.
+        /// </summary>
+        public static string ScriptActionDragDrop {
+            get {
+                return ResourceManager.GetString("ScriptActionDragDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target 0x{0:X8}.
+        /// </summary>
+        public static string ScriptActionTarget {
+            get {
+                return ResourceManager.GetString("ScriptActionTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target Loc ({0}, {1}, {2}).
+        /// </summary>
+        public static string ScriptActionTargetLocation {
+            get {
+                return ResourceManager.GetString("ScriptActionTargetLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open {0} 0x{1:X8}.
+        /// </summary>
+        public static string ScriptActionOpenContainer {
+            get {
+                return ResourceManager.GetString("ScriptActionOpenContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close {0} 0x{1:X8}.
+        /// </summary>
+        public static string ScriptActionCloseContainer {
+            get {
+                return ResourceManager.GetString("ScriptActionCloseContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack 0x{0:X8}.
+        /// </summary>
+        public static string ScriptActionAttack {
+            get {
+                return ResourceManager.GetString("ScriptActionAttack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bandage Self.
+        /// </summary>
+        public static string ScriptActionBandageSelf {
+            get {
+                return ResourceManager.GetString("ScriptActionBandageSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Context Menu 0x{0:X8} [{1}].
+        /// </summary>
+        public static string ScriptActionContextMenu {
+            get {
+                return ResourceManager.GetString("ScriptActionContextMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Skill "{0}".
+        /// </summary>
+        public static string ScriptActionUseSkill {
+            get {
+                return ResourceManager.GetString("ScriptActionUseSkill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Equip 0x{0:X8} ({1}).
+        /// </summary>
+        public static string ScriptActionEquipItem {
+            get {
+                return ResourceManager.GetString("ScriptActionEquipItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gump Button {0} (0x{1:X8}).
+        /// </summary>
+        public static string ScriptActionReplyGump {
+            get {
+                return ResourceManager.GetString("ScriptActionReplyGump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Head Msg "{0}" (0x{1:X8}).
+        /// </summary>
+        public static string ScriptActionHeadMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionHeadMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party: "{0}".
+        /// </summary>
+        public static string ScriptActionPartyMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionPartyMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guild: "{0}".
+        /// </summary>
+        public static string ScriptActionGuildMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionGuildMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ally: "{0}".
+        /// </summary>
+        public static string ScriptActionAllyMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionAllyMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whisper: "{0}".
+        /// </summary>
+        public static string ScriptActionWhisperMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionWhisperMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yell: "{0}".
+        /// </summary>
+        public static string ScriptActionYellMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionYellMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emote: "{0}".
+        /// </summary>
+        public static string ScriptActionEmoteMsg {
+            get {
+                return ResourceManager.GetString("ScriptActionEmoteMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mount 0x{0:X8}.
+        /// </summary>
+        public static string ScriptActionMount {
+            get {
+                return ResourceManager.GetString("ScriptActionMount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismount.
+        /// </summary>
+        public static string ScriptActionDismount {
+            get {
+                return ResourceManager.GetString("ScriptActionDismount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Ability "{0}".
+        /// </summary>
+        public static string ScriptActionToggleAbility {
+            get {
+                return ResourceManager.GetString("ScriptActionToggleAbility", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invoke Virtue "{0}".
+        /// </summary>
+        public static string ScriptActionVirtue {
+            get {
+                return ResourceManager.GetString("ScriptActionVirtue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wait for gump.
+        /// </summary>
+        public static string ScriptActionWaitForGump {
+            get {
+                return ResourceManager.GetString("ScriptActionWaitForGump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}(...).
+        /// </summary>
+        public static string ScriptActionUnknown {
+            get {
+                return ResourceManager.GetString("ScriptActionUnknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied to clipboard!.
+        /// </summary>
+        public static string ScriptInfoCopiedToClipboard {
+            get {
+                return ResourceManager.GetString("ScriptInfoCopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to container.
+        /// </summary>
+        public static string ScriptContainer {
+            get {
+                return ResourceManager.GetString("ScriptContainer", resourceCulture);
+            }
+        }
     }
 }
