@@ -41,9 +41,15 @@ namespace ClassicUO
         public static void Boot(UnmanagedAssistantHost pluginHost, string[] args)
         {
             CopyRequiredLibs();
+            
+            // 强制设置为中文
+            CultureInfo.CurrentUICulture = new CultureInfo("zh-CN");
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            
             Language.Load();
             Log.Start(LogTypes.All);
+            
+            Log.Trace($"CurrentUICulture set to: {CultureInfo.CurrentUICulture.Name}");
 
             //DllMap.Init();
 

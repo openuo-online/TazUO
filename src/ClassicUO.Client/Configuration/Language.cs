@@ -53,7 +53,8 @@ namespace ClassicUO.Configuration
                     // Language file load failed, will try default
                 }
             }
-            // 检查是否有语言文件
+            
+            // 检查是否有默认语言文件
             if (File.Exists(languageFilePath))
             {
                 try
@@ -102,6 +103,78 @@ namespace ClassicUO.Configuration
 
             string uiName = CultureInfo.CurrentUICulture?.Name ?? string.Empty; // e.g. zh-CN
             string two = CultureInfo.CurrentUICulture?.TwoLetterISOLanguageName ?? string.Empty; // e.g. zh
+
+            // macOS 特殊处理：.NET 在 macOS 上可能无法正确获取 CurrentUICulture
+            // 需要直接从 macOS 系统设置读取
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX))
+            {
+                try
+                {
+                    // 尝试从 macOS 的 AppleLocale 获取
+                    var process = new System.Diagnostics.Process
+                    {
+                        StartInfo = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = "defaults",
+                            Arguments = "read -g AppleLocale",
+                            RedirectStandardOutput = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+                        }
+                    };
+                    process.Start();
+                    string appleLocale = process.StandardOutput.ReadToEnd().Trim();
+                    process.WaitForExit();
+                    
+                    if (!string.IsNullOrWhiteSpace(appleLocale))
+                    {
+                        // AppleLocale 格式: zh_CN 或 zh_Hans_CN
+                        // 转换为 zh-CN
+                        if (appleLocale.Contains("_"))
+                        {
+                            var parts = appleLocale.Split('_');
+                            if (parts.Length >= 2)
+                            {
+                                // 处理 zh_Hans_CN 格式，取第一个和最后一个部分
+                                string lang = parts[0];
+                                string region = parts[parts.Length - 1];
+                                uiName = $"{lang}-{region}";
+                                two = lang;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+
+            // 如果还是空的，尝试从环境变量获取
+            if (string.IsNullOrWhiteSpace(uiName))
+            {
+                try
+                {
+                    string lang = Environment.GetEnvironmentVariable("LANG");
+                    
+                    if (!string.IsNullOrWhiteSpace(lang))
+                    {
+                        // LANG 格式通常是 zh_CN.UTF-8，转换为 zh-CN
+                        if (lang.Contains("_"))
+                        {
+                            var parts = lang.Split('_', '.');
+                            if (parts.Length >= 2)
+                            {
+                                uiName = $"{parts[0]}-{parts[1].ToUpper()}";
+                                two = parts[0];
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
 
             var specific = string.IsNullOrWhiteSpace(uiName) ? null : Path.Combine(dataDir, $"Language.{uiName}.json");
             var twoLetter = string.IsNullOrWhiteSpace(two) ? null : Path.Combine(dataDir, $"Language.{two}.json");
