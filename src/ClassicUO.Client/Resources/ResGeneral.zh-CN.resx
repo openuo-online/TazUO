@@ -439,7 +439,7 @@ Ultima Online?</value>
     <value>寻路中！</value>
   </data>
   <!-- 登录消息 -->
-  <data name="Connecting" xml:space="preserve">
+  <!-- <data name="Connecting" xml:space="preserve">
     <value>正在连接...</value>
   </data>
   <data name="VerifyingAccount" xml:space="preserve">
@@ -460,7 +460,7 @@ Ultima Online?</value>
   <data name="ReconnectPleaseWait01" xml:space="preserve">
     <value>正在重新连接，请稍候...`{0}`
 `{1}`</value>
-  </data>
+  </data> -->
   <!-- 截图消息 -->
   <data name="ScreenshotStoredIn0" xml:space="preserve">
     <value>截图已保存至: {0}</value>
