@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using ClassicUO.Game;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Game.UI.ImGuiControls.Legion;
 using ClassicUO.Input;
 using ClassicUO.LegionScripting;
+using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using ImGuiNET;
 using Vector2 = System.Numerics.Vector2;
@@ -25,6 +29,7 @@ namespace ClassicUO.Game.UI.ImGuiControls
         private ScriptFile _contextMenuScript = null;
         private Vector2 _contextMenuPosition;
         private bool _pendingReload = false;
+        private uint _pendingReloadTime = 0;
         private bool _shouldCancelRename = false;
 
         private const string SCRIPT_HEADER =
@@ -51,6 +56,8 @@ while True:
     API.Pause(0.5)";
 
         private const string NOGROUPTEXT = "No group";
+        private const string RepeatStartMarker = "# <ClassicUORepeatStart>";
+        private const string RepeatEndMarker = "# <ClassicUORepeatEnd>";
 
         // Helper classes for cleaner state management
 
@@ -84,6 +91,13 @@ while True:
                 GroupParent = "";
                 Buffer = "";
             }
+        }
+
+        private class ScriptRunSettings
+        {
+            public int RepeatCount { get; set; } = 500;
+            public bool RepeatEnabled { get; set; }
+            public string RepeatBuffer { get; set; } = "1";
         }
 
         private class DialogState
@@ -140,11 +154,27 @@ while True:
 
         private readonly RenameState _renameState = new RenameState();
         private readonly DialogState _dialogState = new DialogState();
+        private readonly Dictionary<string, ScriptRunSettings> _scriptRunSettings = new Dictionary<string, ScriptRunSettings>();
 
         private ScriptManagerWindow() : base(ImGuiTranslations.Get("Script Manager"))
         {
             WindowFlags = ImGuiWindowFlags.None;
             _pendingReload = true;
+        }
+
+        public void RequestReload(uint delayMs = 0)
+        {
+            if (delayMs == 0)
+            {
+                _pendingReload = true;
+                _pendingReloadTime = 0;
+            }
+            else
+            {
+                uint target = Time.Ticks + delayMs;
+                if (target == 0) target = 1;
+                _pendingReloadTime = target;
+            }
         }
 
         public override void DrawContent()
@@ -157,6 +187,12 @@ while True:
             ImGui.PushStyleColor(ImGuiCol.HeaderHovered, ImGuiTheme.Current.Primary * 0.8f);
             ImGui.PushStyleColor(ImGuiCol.HeaderActive, ImGuiTheme.Current.Primary);
             ImGui.PushStyleColor(ImGuiCol.Header, ImGuiTheme.Current.Primary);
+
+            if (!_pendingReload && _pendingReloadTime != 0 && Time.Ticks >= _pendingReloadTime)
+            {
+                _pendingReload = true;
+                _pendingReloadTime = 0;
+            }
 
             // Load scripts if needed
             if (_pendingReload)
@@ -209,6 +245,13 @@ while True:
 
             }
             ImGui.SameLine();
+
+            if (ImGui.Button(ImGuiTranslations.Get("Script Recording") + "##RecordBtn"))
+            {
+                    UIManager.Add(new ScriptRecordingGump());
+            }
+            ImGui.SameLine();
+
             if (ImGui.Button(ImGuiTranslations.Get("Add +") + "##AddBtn"))
             {
                 _showContextMenu = true;
@@ -419,16 +462,62 @@ while True:
             ImGui.Text(spacer);
             ImGui.SameLine();
 
-            // Add menu button next to play button
-            if (ImGui.Button("..."))
+            ScriptRunSettings runSettings = GetRunSettings(script);
+
+            ImGui.SetNextItemWidth(100);
+            string repeatBuffer = runSettings.RepeatBuffer;
+            bool repeatInputChanged = ImGui.InputText(
+                $"##repeatCount{script.FullPath}",
+                ref repeatBuffer,
+                8,
+                ImGuiInputTextFlags.CharsDecimal
+            );
+            if (repeatInputChanged)
             {
-                _showContextMenu = true;
-                _contextMenuScript = script;
-                _contextMenuGroup = "";
-                _contextMenuSubGroup = "";
-                _contextMenuPosition = ImGui.GetMousePos();
+                runSettings.RepeatBuffer = repeatBuffer;
+                if (int.TryParse(repeatBuffer, out int parsed) && parsed >= 1)
+                {
+                    runSettings.RepeatCount = parsed;
+                    runSettings.RepeatBuffer = parsed.ToString();
+                    if (runSettings.RepeatEnabled)
+                    {
+                        UpdateRepeatDelay(script, runSettings);
+                    }
+                }
+            }
+            if (!ImGui.IsItemActive())
+            {
+                if (!int.TryParse(runSettings.RepeatBuffer, out int parsed) || parsed < 1)
+                {
+                    runSettings.RepeatCount = 1;
+                    runSettings.RepeatBuffer = "1";
+                    if (runSettings.RepeatEnabled)
+                    {
+                        UpdateRepeatDelay(script, runSettings);
+                    }
+                }
             }
             ImGui.SameLine();
+
+            bool repeatEnabled = runSettings.RepeatEnabled;
+            if (ImGui.Checkbox($"重复##repeatToggle{script.FullPath}", ref repeatEnabled))
+            {
+                if (repeatEnabled)
+                {
+                    if (!ApplyRepeatWrapper(script, runSettings))
+                    {
+                        repeatEnabled = false;
+                    }
+                }
+                else
+                {
+                    RemoveRepeatWrapper(script);
+                }
+
+                runSettings.RepeatEnabled = repeatEnabled;
+            }
+            ImGui.SameLine();
+
             // Get script display name (without extension)
             string displayName = script.FileName;
             int lastDotIndex = displayName.LastIndexOf('.');
@@ -521,7 +610,10 @@ while True:
             {
                 // Normal script display with native double-click detection
                 bool isSelected = false;
+                Vector4 scriptNameColor = new Vector4(0.7f, 1.0f, 0.7f, 1.0f);
+                ImGui.PushStyleColor(ImGuiCol.Text, scriptNameColor);
                 ImGui.Selectable($"{displayName}", isSelected);
+                ImGui.PopStyleColor();
 
                 // Use native ImGUI double-click detection
                 if (ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left))
@@ -566,6 +658,284 @@ while True:
                 _contextMenuPosition = ImGui.GetMousePos();
             }
             ImGui.PopID();
+        }
+
+        private ScriptRunSettings GetRunSettings(ScriptFile script)
+        {
+            if (!_scriptRunSettings.TryGetValue(script.FullPath, out ScriptRunSettings settings))
+            {
+                settings = new ScriptRunSettings();
+                if (TryReadRepeatSettings(script, out int detectedDelay))
+                {
+                    settings.RepeatEnabled = true;
+                    settings.RepeatCount = detectedDelay;
+                }
+                settings.RepeatBuffer = settings.RepeatCount.ToString();
+                _scriptRunSettings[script.FullPath] = settings;
+            }
+
+            return settings;
+        }
+
+        private bool ApplyRepeatWrapper(ScriptFile script, ScriptRunSettings settings)
+        {
+            try
+            {
+                string normalized = ReadScriptNormalized(script);
+
+                if (string.IsNullOrWhiteSpace(normalized))
+                {
+                    GameActions.Print("脚本内容为空，无法启用重复执行。", 33);
+                    return false;
+                }
+
+                if (normalized.Contains(RepeatStartMarker))
+                {
+                    UpdateRepeatDelay(script, settings);
+                    return true;
+                }
+
+                SplitScriptSections(normalized, out string header, out string body);
+                string indentedBody = IndentBody(body);
+                string delayValue = GetDelaySeconds(settings);
+
+                var sb = new StringBuilder();
+                sb.Append(header);
+                sb.Append(RepeatStartMarker).Append('\n');
+                sb.Append("while True:\n");
+                if (!string.IsNullOrEmpty(indentedBody))
+                {
+                    sb.Append(indentedBody);
+                    if (!indentedBody.EndsWith("\n", StringComparison.Ordinal))
+                    {
+                        sb.Append('\n');
+                    }
+                }
+                sb.Append("    API.Pause(").Append(delayValue).Append(")\n");
+                sb.Append(RepeatEndMarker).Append('\n');
+
+                SaveScriptNormalized(script, sb.ToString());
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to enable repeat for {script.FileName}: {ex}");
+                GameActions.Print($"启用脚本重复失败: {ex.Message}", 33);
+                return false;
+            }
+        }
+
+        private bool RemoveRepeatWrapper(ScriptFile script)
+        {
+            try
+            {
+                string normalized = ReadScriptNormalized(script);
+                int startIndex = normalized.IndexOf(RepeatStartMarker, StringComparison.Ordinal);
+                if (startIndex < 0)
+                {
+                    return false;
+                }
+
+                int whileIndex = normalized.IndexOf("while True:\n", startIndex, StringComparison.Ordinal);
+                if (whileIndex < 0)
+                {
+                    return false;
+                }
+
+                int bodyStart = whileIndex + "while True:\n".Length;
+                int pauseIndex = normalized.IndexOf("\n    API.Pause(", bodyStart, StringComparison.Ordinal);
+                if (pauseIndex < 0)
+                {
+                    return false;
+                }
+
+                int endIndex = normalized.IndexOf(RepeatEndMarker, pauseIndex, StringComparison.Ordinal);
+                if (endIndex < 0)
+                {
+                    return false;
+                }
+
+                string header = normalized.Substring(0, startIndex);
+                string indentedBody = normalized.Substring(bodyStart, pauseIndex - bodyStart);
+                string tail = normalized.Substring(endIndex + RepeatEndMarker.Length);
+                string restoredBody = UnindentBody(indentedBody);
+
+                string rebuilt = header + restoredBody + tail;
+                SaveScriptNormalized(script, rebuilt);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to disable repeat for {script.FileName}: {ex}");
+                GameActions.Print($"移除脚本重复逻辑失败: {ex.Message}", 33);
+                return false;
+            }
+        }
+
+        private void UpdateRepeatDelay(ScriptFile script, ScriptRunSettings settings)
+        {
+            try
+            {
+                string normalized = ReadScriptNormalized(script);
+                int startIndex = normalized.IndexOf(RepeatStartMarker, StringComparison.Ordinal);
+                if (startIndex < 0)
+                {
+                    return;
+                }
+
+                int pauseIndex = normalized.IndexOf("API.Pause(", startIndex, StringComparison.Ordinal);
+                if (pauseIndex < 0)
+                {
+                    return;
+                }
+
+                int openParen = pauseIndex + "API.Pause(".Length;
+                int closeParen = normalized.IndexOf(')', openParen);
+                if (closeParen < 0)
+                {
+                    return;
+                }
+
+                string delayValue = GetDelaySeconds(settings);
+                string existingValue = normalized.Substring(openParen, closeParen - openParen);
+                if (existingValue == delayValue)
+                {
+                    return;
+                }
+
+                string updated = normalized.Substring(0, openParen) + delayValue + normalized.Substring(closeParen);
+
+                SaveScriptNormalized(script, updated);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to update repeat delay for {script.FileName}: {ex}");
+            }
+        }
+
+        private bool TryReadRepeatSettings(ScriptFile script, out int delayMs)
+        {
+            delayMs = 1000;
+            try
+            {
+                string normalized = ReadScriptNormalized(script);
+                int startIndex = normalized.IndexOf(RepeatStartMarker, StringComparison.Ordinal);
+                if (startIndex < 0)
+                {
+                    return false;
+                }
+
+                int pauseIndex = normalized.IndexOf("API.Pause(", startIndex, StringComparison.Ordinal);
+                if (pauseIndex < 0)
+                {
+                    return false;
+                }
+
+                int openParen = pauseIndex + "API.Pause(".Length;
+                int closeParen = normalized.IndexOf(')', openParen);
+                if (closeParen < 0)
+                {
+                    return false;
+                }
+
+                string delayValue = normalized.Substring(openParen, closeParen - openParen);
+                if (float.TryParse(delayValue, NumberStyles.Float, CultureInfo.InvariantCulture, out float seconds))
+                {
+                    delayMs = Math.Max(1, (int)Math.Round(seconds * 1000f));
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to inspect repeat settings for {script.FileName}: {ex}");
+            }
+
+            return false;
+        }
+
+        private static void SplitScriptSections(string normalized, out string header, out string body)
+        {
+            int index = normalized.IndexOf("\n\n", StringComparison.Ordinal);
+            if (index >= 0)
+            {
+                header = normalized.Substring(0, index + 2);
+                body = normalized.Substring(index + 2);
+            }
+            else
+            {
+                header = "";
+                body = normalized;
+            }
+        }
+
+        private static string IndentBody(string body)
+        {
+            if (string.IsNullOrEmpty(body))
+            {
+                return string.Empty;
+            }
+
+            string[] lines = body.Split(new[] { '\n' }, StringSplitOptions.None);
+            var sb = new StringBuilder(body.Length + lines.Length * 4);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                sb.Append("    ");
+                sb.Append(lines[i]);
+                if (i < lines.Length - 1)
+                {
+                    sb.Append('\n');
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static string UnindentBody(string body)
+        {
+            if (string.IsNullOrEmpty(body))
+            {
+                return string.Empty;
+            }
+
+            string[] lines = body.Split(new[] { '\n' }, StringSplitOptions.None);
+            var sb = new StringBuilder(body.Length);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                if (line.StartsWith("    ", StringComparison.Ordinal))
+                {
+                    line = line.Substring(4);
+                }
+                sb.Append(line);
+                if (i < lines.Length - 1)
+                {
+                    sb.Append('\n');
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private string ReadScriptNormalized(ScriptFile script)
+        {
+            string text = File.ReadAllText(script.FullPath);
+            return text.Replace("\r\n", "\n");
+        }
+
+        private void SaveScriptNormalized(ScriptFile script, string normalizedContent)
+        {
+            string converted = normalizedContent.Replace("\n", Environment.NewLine);
+            script.OverrideFileContents(converted);
+            script.ReadFromFile();
+        }
+
+        private static string GetDelaySeconds(ScriptRunSettings settings)
+        {
+            float seconds = Math.Max(1, settings.RepeatCount) / 1000f;
+            return seconds.ToString("0.###", CultureInfo.InvariantCulture);
         }
 
         private void ToggleGroupState(bool isCollapsed, string fullGroupPath, string normalizedParentGroup, string normalizedGroupName)
@@ -945,7 +1315,11 @@ while True:
             bool showNewScript = _dialogState.ShowNewScript;
             if (ImGui.BeginPopupModal(ImGuiTranslations.Get("New Script") + "##NewScriptDialog", ref showNewScript, ImGuiWindowFlags.AlwaysAutoResize))
             {
-                _dialogState.ShowNewScript = showNewScript;
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) && ImGui.IsWindowHovered())
+                {
+                    showNewScript = false;
+                }
+
                 ImGui.Text(ImGuiTranslations.Get("Enter a name for this script."));
                 ImGui.Text(ImGuiTranslations.Get("Use .lscript or .py extension"));
 
@@ -959,14 +1333,19 @@ while True:
                 {
                     if (!string.IsNullOrEmpty(_dialogState.NewScriptName))
                     {
-                        if (_dialogState.NewScriptName.EndsWith(".lscript") || _dialogState.NewScriptName.EndsWith(".py"))
+                        string trimmedInput = _dialogState.NewScriptName.Trim();
+                        if (!trimmedInput.EndsWith(".lscript", StringComparison.OrdinalIgnoreCase) &&
+                            !trimmedInput.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Validate and sanitize the script name to ensure it is a plain filename
-                            string sanitizedName = Path.GetFileName(_dialogState.NewScriptName.Trim());
+                            trimmedInput += ".py";
+                        }
 
-                            // Reject names that contain path separators or relative navigation
+                        if (trimmedInput.EndsWith(".lscript", StringComparison.OrdinalIgnoreCase) || trimmedInput.EndsWith(".py", StringComparison.OrdinalIgnoreCase))
+                        {
+                            string sanitizedName = Path.GetFileName(trimmedInput);
+
                             if (string.IsNullOrWhiteSpace(sanitizedName) ||
-                                sanitizedName != _dialogState.NewScriptName.Trim() ||
+                                !sanitizedName.Equals(trimmedInput, StringComparison.Ordinal) ||
                                 sanitizedName.Contains("\\") ||
                                 sanitizedName.Contains("/") ||
                                 sanitizedName.Contains("..") ||
@@ -979,11 +1358,9 @@ while True:
                             {
                                 try
                                 {
-                                    // Normalize sentinels by replacing NOGROUPTEXT with empty string
                                     string normalizedGroup = _contextMenuGroup == NOGROUPTEXT ? "" : _contextMenuGroup;
                                     string normalizedSubGroup = _contextMenuSubGroup == NOGROUPTEXT ? "" : _contextMenuSubGroup;
 
-                                    // Sanitize group path segments as well
                                     if (!string.IsNullOrEmpty(normalizedGroup))
                                         normalizedGroup = Path.GetFileName(normalizedGroup);
                                     if (!string.IsNullOrEmpty(normalizedSubGroup))
@@ -993,16 +1370,13 @@ while True:
                                         string.IsNullOrEmpty(normalizedSubGroup) ? normalizedGroup :
                                         Path.Combine(normalizedGroup, normalizedSubGroup);
 
-                                    // Build target paths
                                     string targetDirectory = Path.Combine(LegionScripting.LegionScripting.ScriptPath, gPath ?? "");
                                     string filePath = Path.Combine(targetDirectory, sanitizedName);
 
-                                    // Get full paths and verify they stay within the scripts root
                                     string scriptsRootFullPath = Path.GetFullPath(LegionScripting.LegionScripting.ScriptPath);
                                     string targetDirectoryFullPath = Path.GetFullPath(targetDirectory);
                                     string targetFileFullPath = Path.GetFullPath(filePath);
 
-                                    // Verify both directory and file paths are within the scripts root
                                     if (!targetDirectoryFullPath.StartsWith(scriptsRootFullPath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) &&
                                         !targetDirectoryFullPath.Equals(scriptsRootFullPath, StringComparison.OrdinalIgnoreCase))
                                     {
@@ -1015,15 +1389,13 @@ while True:
                                     }
                                     else
                                     {
-                                        // Create directory if it doesn't exist (now validated)
                                         if (!Directory.Exists(targetDirectoryFullPath))
                                             Directory.CreateDirectory(targetDirectoryFullPath);
 
-                                        // Create script file if it doesn't exist
                                         if (!File.Exists(targetFileFullPath))
                                         {
                                             File.WriteAllText(targetFileFullPath, SCRIPT_HEADER);
-                                            _pendingReload = true;
+                                            RequestReload(750);
                                             GameActions.Print(World.Instance, $"Created script '{sanitizedName}'", 66);
                                         }
                                         else
@@ -1058,7 +1430,7 @@ while True:
                     }
 
                     _dialogState.NewScriptName = "";
-                    _dialogState.ShowNewScript = false;
+                    showNewScript = false;
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -1067,17 +1439,27 @@ while True:
                 if (ImGui.Button(ImGuiTranslations.Get("Cancel") + "##CancelScript"))
                 {
                     _dialogState.NewScriptName = "";
-                    _dialogState.ShowNewScript = false;
+                    showNewScript = false;
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
             }
 
+            if (!showNewScript && _dialogState.ShowNewScript)
+            {
+                _dialogState.NewScriptName = "";
+            }
+            _dialogState.ShowNewScript = showNewScript;
+
             // New Group Dialog
             bool showNewGroup = _dialogState.ShowNewGroup;
             if (ImGui.BeginPopupModal(ImGuiTranslations.Get("New Group") + "##NewGroupDialog", ref showNewGroup, ImGuiWindowFlags.AlwaysAutoResize))
             {
-                _dialogState.ShowNewGroup = showNewGroup;
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Right) && ImGui.IsWindowHovered())
+                {
+                    showNewGroup = false;
+                }
+
                 ImGui.Text(ImGuiTranslations.Get("Enter a name for this group."));
 
                 string groupName = _dialogState.NewGroupName;
@@ -1090,17 +1472,14 @@ while True:
                 {
                     if (!string.IsNullOrEmpty(_dialogState.NewGroupName))
                     {
-                        // Sanitize the group name to prevent path traversal
                         string sanitizedGroupName = Path.GetFileName(_dialogState.NewGroupName.Trim());
 
-                        // Remove extension if present
                         int p = sanitizedGroupName.IndexOf('.');
                         if (p != -1)
                             sanitizedGroupName = sanitizedGroupName.Substring(0, p);
 
-                        // Explicitly reject names that contain directory separators or equal ".."
                         if (string.IsNullOrEmpty(sanitizedGroupName) ||
-                            sanitizedGroupName != _dialogState.NewGroupName.Trim() ||
+                            !sanitizedGroupName.Equals(_dialogState.NewGroupName.Trim(), StringComparison.Ordinal) ||
                             sanitizedGroupName.Contains("\\") ||
                             sanitizedGroupName.Contains("/") ||
                             sanitizedGroupName == ".." ||
@@ -1112,11 +1491,9 @@ while True:
                         {
                             try
                             {
-                                // Build full path including parent group with sanitized segments
                                 string normalizedGroup = _contextMenuGroup == NOGROUPTEXT ? "" : _contextMenuGroup;
                                 string normalizedSubGroup = _contextMenuSubGroup == NOGROUPTEXT ? "" : _contextMenuSubGroup;
 
-                                // Sanitize parent group segments as well
                                 if (!string.IsNullOrEmpty(normalizedGroup))
                                     normalizedGroup = Path.GetFileName(normalizedGroup);
                                 if (!string.IsNullOrEmpty(normalizedSubGroup))
@@ -1127,11 +1504,9 @@ while True:
                                     normalizedSubGroup ?? "",
                                     sanitizedGroupName);
 
-                                // Resolve both paths to absolute canonical paths
                                 string scriptsRootPath = Path.GetFullPath(LegionScripting.LegionScripting.ScriptPath);
                                 string targetPath = Path.GetFullPath(path);
 
-                                // Verify the target path starts with the scripts root path
                                 if (!targetPath.StartsWith(scriptsRootPath + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) &&
                                     !targetPath.Equals(scriptsRootPath, StringComparison.OrdinalIgnoreCase))
                                 {
@@ -1158,7 +1533,7 @@ while True:
                             }
                             catch (IOException ioEx)
                             {
-                                GameActions.Print(World.Instance, $"Directory operation failed: {ioEx.Message}", 32);
+                                GameActions.Print(World.Instance, $"File operation failed: {ioEx.Message}", 32);
                             }
                             catch (Exception e)
                             {
@@ -1169,7 +1544,7 @@ while True:
                     }
 
                     _dialogState.NewGroupName = "";
-                    _dialogState.ShowNewGroup = false;
+                    showNewGroup = false;
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -1178,13 +1553,18 @@ while True:
                 if (ImGui.Button(ImGuiTranslations.Get("Cancel") + "##CancelGroup"))
                 {
                     _dialogState.NewGroupName = "";
-                    _dialogState.ShowNewGroup = false;
+                    showNewGroup = false;
                     ImGui.CloseCurrentPopup();
                 }
                 ImGui.EndPopup();
             }
 
-            // Rename Group Dialog
+            if (!showNewGroup && _dialogState.ShowNewGroup)
+            {
+                _dialogState.NewGroupName = "";
+            }
+            _dialogState.ShowNewGroup = showNewGroup;
+
             bool showRenameGroup = _dialogState.ShowRenameGroup;
             if (ImGui.BeginPopupModal("Rename Group##RenameGroupDialog", ref showRenameGroup, ImGuiWindowFlags.AlwaysAutoResize))
             {

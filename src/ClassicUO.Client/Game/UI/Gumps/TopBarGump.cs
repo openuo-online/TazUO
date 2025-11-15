@@ -186,10 +186,10 @@ namespace ClassicUO.Game.UI.Gumps
             );
             moreMenu.ContextMenu = new ContextMenuControl(this);
             moreMenu.MouseUp += (s, e) => { moreMenu.ContextMenu?.Show(); };
-            moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Commands, () =>
-            {
-                UIManager.Add(new CommandsGump(world));
-            }));
+            // moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Commands, () =>
+            // {
+            //     UIManager.Add(new CommandsGump(world));
+            // }));
             moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Info, () =>
             {
                 if (World.TargetManager.IsTargeting)
@@ -199,41 +199,41 @@ namespace ClassicUO.Game.UI.Gumps
 
                 World.TargetManager.SetTargeting(CursorTarget.SetTargetClientSide, CursorType.Target, TargetType.Neutral);
             }));
-            moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Debug, () =>
-            {
-                DebugGump debugGump = UIManager.GetGump<DebugGump>();
+            // moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Debug, () =>
+            // {
+            //     DebugGump debugGump = UIManager.GetGump<DebugGump>();
 
-                if (debugGump == null)
-                {
-                    debugGump = new DebugGump(World, 100, 100);
-                    UIManager.Add(debugGump);
-                }
-                else
-                {
-                    debugGump.IsVisible = !debugGump.IsVisible;
-                    debugGump.SetInScreen();
-                }
-            }));
-            moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.NetStats, () =>
-            {
-                NetworkStatsGump netstatsgump = UIManager.GetGump<NetworkStatsGump>();
+            //     if (debugGump == null)
+            //     {
+            //         debugGump = new DebugGump(World, 100, 100);
+            //         UIManager.Add(debugGump);
+            //     }
+            //     else
+            //     {
+            //         debugGump.IsVisible = !debugGump.IsVisible;
+            //         debugGump.SetInScreen();
+            //     }
+            // }));
+            // moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.NetStats, () =>
+            // {
+            //     NetworkStatsGump netstatsgump = UIManager.GetGump<NetworkStatsGump>();
 
-                if (netstatsgump == null)
-                {
-                    netstatsgump = new NetworkStatsGump(World, 100, 100);
-                    UIManager.Add(netstatsgump);
-                }
-                else
-                {
-                    netstatsgump.IsVisible = !netstatsgump.IsVisible;
-                    netstatsgump.SetInScreen();
-                }
-            }));
+            //     if (netstatsgump == null)
+            //     {
+            //         netstatsgump = new NetworkStatsGump(World, 100, 100);
+            //         UIManager.Add(netstatsgump);
+            //     }
+            //     else
+            //     {
+            //         netstatsgump.IsVisible = !netstatsgump.IsVisible;
+            //         netstatsgump.SetInScreen();
+            //     }
+            // }));
             moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Help, () => { GameActions.RequestHelp(); }));
 
             moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.ToggleNameplates, () => { World.NameOverHeadManager.ToggleOverheads(); }));
 
-            moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Discord, () => { UIManager.Add(new DiscordGump(World)); }));
+            // moreMenu.ContextMenu.Add(new ContextMenuItemEntry(ResGumps.Discord, () => { UIManager.Add(new DiscordGump(World)); }));
 
             var submenu = new ContextMenuItemEntry(ResGumps.Tools);
             submenu.Add(new ContextMenuItemEntry(ResGumps.SpellQuickCast, () => { UIManager.Add(new SpellQuickSearch(World, 200, 200, (sp) => {if (sp != null) GameActions.CastSpell(sp.ID);})); }));

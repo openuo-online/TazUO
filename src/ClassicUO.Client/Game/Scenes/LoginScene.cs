@@ -5,6 +5,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
+using ClassicUO.Game.UI;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Game.UI.Gumps.CharCreation;
 using ClassicUO.Game.UI.Gumps.Login;
@@ -142,11 +143,10 @@ namespace ClassicUO.Game.Scenes
                 Client.Game.RestoreWindow();
             }
 
-            // 登录界面：固定640x480，根据DPI缩放窗体大小
-            // 这样视觉上始终是640x480的大小
-            int loginWidth = (int)(640 * CUOEnviroment.DPIScaleFactor);
-            int loginHeight = (int)(480 * CUOEnviroment.DPIScaleFactor);
-            Client.Game.SetWindowSize(loginWidth, loginHeight);
+            // 登录界面逻辑尺寸保持 640x480，物理尺寸遵循当前缩放
+            var logicalSize = new Microsoft.Xna.Framework.Point(640, 480);
+            var physicalSize = UIScaleHelper.ConvertToPhysical(logicalSize);
+            Client.Game.SetWindowSize(physicalSize.X, physicalSize.Y);
         }
 
 
@@ -401,7 +401,10 @@ namespace ClassicUO.Game.Scenes
         {
             if (CurrentLoginStep == LoginSteps.CharacterSelection)
             {
-                LastCharacterManager.Save(Account, _world.ServerName, Characters[index]);
+                string characterName = Characters[index];
+                LastCharacterManager.Save(Account, _world.ServerName, characterName);
+
+                EnsureProfileLoaded(characterName);
 
                 LoginHandshake.Instance.SendSelectCharacter(index);
             }
@@ -482,6 +485,34 @@ namespace ClassicUO.Game.Scenes
         }
 
         public CityInfo GetCity(int index) => LoginHandshake.Instance.GetCity(index);
+
+        private void EnsureProfileLoaded(string characterName)
+        {
+            if (string.IsNullOrWhiteSpace(Account) || string.IsNullOrWhiteSpace(characterName))
+            {
+                return;
+            }
+
+            string serverName = _world.ServerName;
+
+            if (string.IsNullOrWhiteSpace(serverName))
+            {
+                return;
+            }
+
+            Profile profile = ProfileManager.CurrentProfile;
+
+            bool needsLoad =
+                profile == null
+                || !string.Equals(profile.ServerName, serverName, StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(profile.Username, Account, StringComparison.OrdinalIgnoreCase)
+                || !string.Equals(profile.CharacterName, characterName, StringComparison.OrdinalIgnoreCase);
+
+            if (needsLoad)
+            {
+                ProfileManager.Load(serverName, Account, characterName);
+            }
+        }
 
         private void UpdateCharacterList()
         {

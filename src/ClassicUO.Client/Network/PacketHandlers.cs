@@ -3158,11 +3158,7 @@ sealed class PacketHandlers
         }
         else
         {
-            var gump = new GrayMenuGump(world, serial, id, name)
-            {
-                X = (Client.Game.Window.ClientBounds.Width >> 1) - 200,
-                Y = (Client.Game.Window.ClientBounds.Height >> 1) - ((121 + count * 21) >> 1)
-            };
+            var gump = new GrayMenuGump(world, serial, id, name);
 
             int offsetY = 35 + gump.Height;
             int gumpHeight = 70 + offsetY;
@@ -3204,6 +3200,8 @@ sealed class PacketHandlers
             );
 
             gump.SetHeight(gumpHeight);
+            gump.CenterXInScreen();
+            gump.CenterYInScreen();
             gump.WantUpdateSize = false;
             UIManager.Add(gump);
         }

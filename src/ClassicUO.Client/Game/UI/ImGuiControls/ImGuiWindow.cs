@@ -38,6 +38,8 @@ namespace ClassicUO.Game.UI.ImGuiControls
             set => _windowFlags = value;
         }
 
+        protected virtual void BeforeDraw() { }
+
         public void Draw()
         {
             if (!_isVisible || !_isOpen)
@@ -47,6 +49,8 @@ namespace ClassicUO.Game.UI.ImGuiControls
 
             try
             {
+                BeforeDraw();
+
                 if (ImGui.Begin(Title, ref _isOpen, _windowFlags))
                 {
                     DrawContent();

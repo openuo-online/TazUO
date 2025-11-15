@@ -7,7 +7,7 @@
     "ButtonVideo": "视频",
     "ButtonMacros": "宏",
     "ButtonTooltips": "工具提示",
-    "ButtonSpeech": "语音",
+    "ButtonSpeech": "聊天",
     "ButtonCombatSpells": "战斗与法术",
     "ButtonCounters": "计数器",
     "ButtonInfobar": "信息栏",
@@ -184,7 +184,7 @@
       "ToolTipFont": "默认工具提示字体颜色"
     },
     "GetSpeech": {
-      "ScaleSpeechDelay": "缩放语音延迟",
+      "ScaleSpeechDelay": "缩放聊天延迟",
       "SpeechDelay": "延迟",
       "SaveJournalE": "将日志条目保存到文件",
       "ChatEnterActivation": "按Enter激活聊天",
@@ -193,7 +193,7 @@
       "ChatGradient": "隐藏聊天渐变",
       "HideGuildChat": "隐藏公会聊天",
       "HideAllianceChat": "隐藏联盟聊天",
-      "SpeechColor": "语音颜色",
+      "SpeechColor": "聊天颜色",
       "YellColor": "喊叫颜色",
       "PartyColor": "队伍颜色",
       "AllianceColor": "联盟颜色",

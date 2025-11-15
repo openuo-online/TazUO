@@ -3,6 +3,7 @@
 
 using ClassicUO.Configuration;
 using ClassicUO.Game.Scenes;
+using ClassicUO.Game.UI;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
@@ -427,28 +428,17 @@ namespace ClassicUO.Game.Managers
         public static void Draw(UltimaBatcher2D batcher)
         {
             SortControlsByInfo();
-            
-            // 确定是否需要应用缩放
-            bool shouldScale = false;
-            float scale = 1.0f;
-            
-            if (InGame && ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.GlobalScaling)
+
+            float scale = UIScaleHelper.GetCurrentScale();
+
+            if (scale != 1f)
             {
-                // 游戏内使用Profile的缩放设置
-                shouldScale = true;
-                scale = ProfileManager.CurrentProfile.GlobalScale;
-            }
-            else if (!InGame && CUOEnviroment.DPIScaleFactor > 1.0f)
-            {
-                // 登录界面也使用DPI缩放
-                shouldScale = true;
-                scale = CUOEnviroment.DPIScaleFactor;
-            }
-            
-            if (shouldScale)
                 batcher.Begin(null, Matrix.CreateScale(scale));
+            }
             else
+            {
                 batcher.Begin();
+            }
 
             for (LinkedListNode<Gump> last = Gumps.Last; last != null; last = last.Previous)
             {

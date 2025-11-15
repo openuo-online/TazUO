@@ -7,6 +7,7 @@ using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
+using ClassicUO.Game.UI.ImGuiControls;
 using ClassicUO.Input;
 using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
@@ -119,7 +120,7 @@ namespace ClassicUO.LegionScripting
             {
                 X = BorderSize + 10,
                 Y = currentY,
-                IsChecked = true
+                IsChecked = false
             };
             Add(_recordPausesCheckbox);
 
@@ -525,12 +526,16 @@ namespace ClassicUO.LegionScripting
         {
             try
             {
+                if (ScriptRecorder.Instance.IsRecording)
+                    ScriptRecorder.Instance.StopRecording();
+
                 string script = ScriptRecorder.Instance.GenerateScript(_recordPausesCheckbox.IsChecked);
-                string fileName = $"recorded_script_{DateTime.Now:yyyyMMdd_HHmmss}.py";
+                string fileName = $"recorded_{DateTime.Now:yyyyMMdd_HHmmss}.py";
                 string filePath = System.IO.Path.Combine(LegionScripting.ScriptPath, fileName);
 
                 System.IO.File.WriteAllText(filePath, script);
                 GameActions.Print(string.Format(Resources.ResGumps.ScriptSavedAs, fileName));
+                ScriptManagerWindow.Instance?.RequestReload(750);
             }
             catch (Exception ex)
             {

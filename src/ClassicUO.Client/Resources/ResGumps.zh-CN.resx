@@ -88,7 +88,7 @@
     <value>声音</value>
   </data>
   <data name="Speech" xml:space="preserve">
-    <value>语音</value>
+    <value>聊天</value>
   </data>
   <data name="Tooltip" xml:space="preserve">
     <value>工具提示</value>
@@ -480,13 +480,13 @@
     <value>在日志中强制使用Unicode</value>
   </data>
   <data name="SpeechFont" xml:space="preserve">
-    <value>语音字体：</value>
+    <value>聊天字体：</value>
   </data>
   <data name="ThatSClassicUO" xml:space="preserve">
     <value>这就是ClassicUO！</value>
   </data>
   <data name="ScaleSpeechDelay" xml:space="preserve">
-    <value>缩放语音延迟</value>
+    <value>缩放聊天延迟</value>
   </data>
   <data name="SaveJournalToFileInGameFolder" xml:space="preserve">
     <value>将日志保存到游戏文件夹</value>
@@ -501,10 +501,10 @@
     <value>使用Shift+Enter发送消息而不关闭聊天</value>
   </data>
   <data name="RandomizeSpeechHues" xml:space="preserve">
-    <value>随机化语音色调</value>
+    <value>随机化聊天色调</value>
   </data>
   <data name="SpeechColor" xml:space="preserve">
-    <value>语音颜色</value>
+    <value>聊天颜色</value>
   </data>
   <data name="EmoteColor" xml:space="preserve">
     <value>表情颜色</value>
@@ -887,7 +887,7 @@
   <data name="NetStats" xml:space="preserve"><value>网络统计</value></data>
   <data name="UOStore" xml:space="preserve"><value>UO商店</value></data>
   <data name="GlobalChat" xml:space="preserve"><value>全局聊天</value></data>
-  <data name="Info" xml:space="preserve"><value>&lt; ? &gt;</value></data>
+  <data name="Info" xml:space="preserve"><value>查看信息</value></data>
   <data name="TopBarGumpAlreadyExists" xml:space="preserve"><value>顶部栏界面已存在！！</value></data>
   <data name="ChatButtonPushedNotImplementedYet" xml:space="preserve"><value>聊天按钮已按下！尚未实现！</value></data>
   <data name="GlobalChatNotImplementedYet" xml:space="preserve"><value>全局聊天尚未实现</value></data>
@@ -1147,7 +1147,7 @@
     <value>助手</value>
   </data>
   <data name="LegionScript" xml:space="preserve">
-    <value>脚本</value>
+    <value>脚本管理</value>
   </data>
   <data name="MoreMenu" xml:space="preserve">
     <value>更多 +</value>

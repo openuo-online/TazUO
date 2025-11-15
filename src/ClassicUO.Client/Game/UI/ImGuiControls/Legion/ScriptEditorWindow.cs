@@ -11,6 +11,7 @@ public class ScriptEditorWindow : ImGuiWindow
     private readonly string _editorLabel;
     private bool _hasChanges;
     private const int MAX_LENGTH = 1024 * 1024;
+    private bool _initialSizeSet;
 
     public ScriptEditorWindow(ScriptFile script) : base(script.FileName)
     {
@@ -23,6 +24,15 @@ public class ScriptEditorWindow : ImGuiWindow
         {
             GameActions.Print("File too large to edit!", 32);
             Dispose();
+        }
+    }
+
+    protected override void BeforeDraw()
+    {
+        if (!_initialSizeSet)
+        {
+            ImGui.SetNextWindowSize(new Vector2(600, 400), ImGuiCond.FirstUseEver);
+            _initialSizeSet = true;
         }
     }
 
