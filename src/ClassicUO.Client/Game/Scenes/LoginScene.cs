@@ -179,18 +179,10 @@ namespace ClassicUO.Game.Scenes
                 case LoginSteps.VerifyingAccount:
                     break;
                 case LoginSteps.ServerSelection:
-                    if (CanAutologin && Servers != null && Servers.Length != 0)
+                    // 只有当服务器列表只有一个服务器时才自动进入
+                    if (CanAutologin && Servers != null && Servers.Length == 1)
                     {
-                        int index = GetServerIndexFromSettings();
-                        // Loop through servers to find the one with matching Index property
-                        for (int i = 0; i < Servers.Length; i++)
-                        {
-                            if (Servers[i].Index == index)
-                            {
-                                SelectServer((byte)index);
-                                break;
-                            }
-                        }
+                        SelectServer((byte)Servers[0].Index);
                     }
                     break;
                 case LoginSteps.LoginInToServer:
