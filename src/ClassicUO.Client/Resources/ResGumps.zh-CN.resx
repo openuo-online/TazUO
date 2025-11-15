@@ -892,11 +892,11 @@
   <data name="ChatButtonPushedNotImplementedYet" xml:space="preserve"><value>聊天按钮已按下！尚未实现！</value></data>
   <data name="GlobalChatNotImplementedYet" xml:space="preserve"><value>全局聊天尚未实现</value></data>
   <data name="ChooseName" xml:space="preserve"><value>你即将为Ultima Online聊天系统选择名称。此名称将是永久的且在此服务器上唯一。它将应用于使用此账户的所有角色。不要使用你的Ultima Online账户名作为此名称，因为你选择的名称将是公开的。在此输入你的聊天名称：</value></data>
-  <data name="Channels" xml:space="preserve"><value>频道</value></data>
-  <data name="YourCurrentChannel" xml:space="preserve"><value>你当前的频道：</value></data>
+  <!-- <data name="Channels" xml:space="preserve"><value>频道</value></data> -->
+  <!-- <data name="YourCurrentChannel" xml:space="preserve"><value>你当前的频道：</value></data>
   <data name="Join" xml:space="preserve"><value>加入</value></data>
   <data name="Leave" xml:space="preserve"><value>离开</value></data>
-  <data name="Create" xml:space="preserve"><value>创建</value></data>
+  <data name="Create" xml:space="preserve"><value>创建</value></data> -->
   <data name="CreateAChannel" xml:space="preserve"><value>创建频道：</value></data>
   <!-- 第5批：地图、标记和最后的条目 (401-499) -->
   <data name="WorldMapLoading" xml:space="preserve"><value>世界地图加载中...</value></data>

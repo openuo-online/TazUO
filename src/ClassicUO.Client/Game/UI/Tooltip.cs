@@ -152,16 +152,27 @@ namespace ClassicUO.Game.UI
                 y = Client.Game.Window.ClientBounds.Height - z_height;
             }
 
+            // 获取GlobalScale用于统一缩放
+            float globalScale = 1f;
+            if (ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.GlobalScaling)
+            {
+                globalScale = ProfileManager.CurrentProfile.GlobalScale;
+            }
+
+            // 综合缩放因子：TooltipDisplayZoom * GlobalScale
+            float totalScale = zoom * globalScale;
+
             X = x - 4;
             Y = y - 2;
-            Width = (int)(z_width * zoom) + 1;
-            Height = (int)(z_height * zoom) + 1;
+            Width = (int)(z_width * totalScale) + 1;
+            Height = (int)(z_height * totalScale) + 1;
 
             Vector3 hue_vec = ShaderHueTranslator.GetHueVector(1, false, alpha);
 
             if (ProfileManager.CurrentProfile != null)
                 hue_vec.X = ProfileManager.CurrentProfile.ToolTipBGHue;
 
+            // 绘制背景（应用总缩放）
             batcher.Draw
             (
                 SolidColorTextureCache.GetTexture(Color.White),
@@ -169,25 +180,39 @@ namespace ClassicUO.Game.UI
                 (
                     x - 4,
                     y - 2,
-                    (int)(z_width * zoom),
-                    (int)(z_height * zoom)
+                    (int)(z_width * totalScale),
+                    (int)(z_height * totalScale)
                 ),
                 hue_vec
             );
 
             hue_vec = ShaderHueTranslator.GetHueVector(0, false, alpha);
 
+            // 绘制边框（应用总缩放）
             batcher.DrawRectangle
             (
                 SolidColorTextureCache.GetTexture(Color.Gray),
                 x - 4,
                 y - 2,
-                (int)(z_width * zoom),
-                (int)(z_height * zoom),
+                (int)(z_width * totalScale),
+                (int)(z_height * totalScale),
                 hue_vec
             );
 
-            _textBox.Draw(batcher, x, y);
+            // 绘制文本（应用总缩放）
+            if (totalScale != 1f)
+            {
+                batcher.SetStencil(null);
+                batcher.End();
+                batcher.Begin(null, Microsoft.Xna.Framework.Matrix.CreateScale(totalScale));
+                _textBox.Draw(batcher, (int)(x / totalScale), (int)(y / totalScale));
+                batcher.End();
+                batcher.Begin();
+            }
+            else
+            {
+                _textBox.Draw(batcher, x, y);
+            }
 
             return true;
         }

@@ -95,6 +95,9 @@ namespace ClassicUO.Game
             _tooltip = new Tooltip(world);
             _aura = new Aura(30);
 
+            // 根据DPI缩放因子来放大光标
+            float cursorScale = Math.Max(1.0f, CUOEnviroment.DPIScaleFactor);
+
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 16; j++)
@@ -110,6 +113,17 @@ namespace ClassicUO.Game
 
                     if (surface != IntPtr.Zero)
                     {
+                        // 如果需要缩放，创建放大的surface
+                        if (cursorScale > 1.0f)
+                        {
+                            nint scaledSurface = ScaleSurface(surface, cursorScale, ref hotX, ref hotY);
+                            if (scaledSurface != IntPtr.Zero)
+                            {
+                                SDL.SDL_DestroySurface(surface);
+                                surface = scaledSurface;
+                            }
+                        }
+
                         if (hotX != 0 || hotY != 0)
                         {
                             _cursorOffset[0, j] = hotX;
@@ -120,6 +134,39 @@ namespace ClassicUO.Game
                     }
                 }
             }
+        }
+
+        private unsafe nint ScaleSurface(nint originalSurface, float scale, ref int hotX, ref int hotY)
+        {
+            if (originalSurface == IntPtr.Zero || scale <= 1.0f)
+                return IntPtr.Zero;
+
+            // 获取原始surface的信息
+            SDL.SDL_Surface* srcSurface = (SDL.SDL_Surface*)originalSurface;
+            int srcWidth = srcSurface->w;
+            int srcHeight = srcSurface->h;
+            
+            int dstWidth = (int)(srcWidth * scale);
+            int dstHeight = (int)(srcHeight * scale);
+
+            // 创建新的surface
+            nint dstSurface = SDL.SDL_CreateSurface(dstWidth, dstHeight, srcSurface->format);
+            if (dstSurface == IntPtr.Zero)
+                return IntPtr.Zero;
+
+            // 使用SDL的缩放功能 - SDL3使用SDL_BlitSurfaceScaled
+            // SDL_ScaleMode: 0=NEAREST, 1=LINEAR
+            if (!SDL.SDL_BlitSurfaceScaled(originalSurface, IntPtr.Zero, dstSurface, IntPtr.Zero, (SDL.SDL_ScaleMode)1))
+            {
+                SDL.SDL_DestroySurface(dstSurface);
+                return IntPtr.Zero;
+            }
+
+            // 缩放热点坐标
+            hotX = (int)(hotX * scale);
+            hotY = (int)(hotY * scale);
+
+            return dstSurface;
         }
 
         public ushort Graphic
@@ -528,11 +575,23 @@ namespace ClassicUO.Game
                 rect.Width -= BORDER_SIZE * 2;
                 rect.Height -= BORDER_SIZE * 2;
 
+                // 应用GlobalScale缩放
+                float gscale = 1;
+                if (ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.GlobalScaling)
+                {
+                    gscale = ProfileManager.CurrentProfile.GlobalScale;
+                }
+
                 sb.Draw(
                     artInfo.Texture,
-                    new Vector2(Mouse.Position.X - offX, Mouse.Position.Y - offY),
+                    new Vector2(Mouse.Position.X - offX * gscale, Mouse.Position.Y - offY * gscale),
                     rect,
-                    hueVec
+                    hueVec,
+                    0f,
+                    Vector2.Zero,
+                    gscale,
+                    SpriteEffects.None,
+                    0f
                 );
             }
         }

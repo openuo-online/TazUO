@@ -201,6 +201,14 @@ namespace ClassicUO.Game.Scenes
             _world.CommandManager.Initialize();
             ItemDatabaseManager.Instance.Initialize();
 
+            // 自动根据DPI设置UI缩放，实现统一的缩放管理
+            if (CUOEnviroment.DPIScaleFactor > 1.0f && !ProfileManager.CurrentProfile.GlobalScaling)
+            {
+                ProfileManager.CurrentProfile.GlobalScaling = true;
+                ProfileManager.CurrentProfile.GlobalScale = CUOEnviroment.DPIScaleFactor;
+                Log.Trace($"Auto-enabled GlobalScaling with scale {CUOEnviroment.DPIScaleFactor:F2} based on DPI");
+            }
+
             var viewport = new WorldViewportGump(_world, this);
             UIManager.Add(viewport, false);
 
